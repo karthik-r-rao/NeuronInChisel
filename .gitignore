@@ -1,3 +1,5 @@
 target
 generated
+project
+test_run_dir
 scripts/*.txt
