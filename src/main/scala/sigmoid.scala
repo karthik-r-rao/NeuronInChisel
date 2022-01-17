@@ -12,7 +12,7 @@ class SigmoidLut(memoryDepth: Int, memoryWidth: Int) extends Module{
 
     val memory = SyncReadMem(memoryDepth, Bits(memoryWidth.W))
     io.value := memory(io.address)
-    loadMemoryFromFile(memory, "/home/karthikrrao/NeuronInChisel/scripts/lut.txt", MemoryLoadFileType.Binary)  
+    loadMemoryFromFile(memory, "/home/karthikrrao/NeuronInChisel/generated/lut.txt", MemoryLoadFileType.Binary)  
 }
 
 object DriverSigmoidLut extends App{

@@ -10,7 +10,7 @@ import sigmoid._
 class SigmoidSpec extends AnyFlatSpec with ChiselScalatestTester{
     "Tester" should "pass" in{
         test(new SigmoidLut(1024, 10)) { dut => 
-            val lines = Source.fromFile("/home/karthikrrao/NeuronInChisel/scripts/lut.txt").getLines().toArray
+            val lines = Source.fromFile("/home/karthikrrao/NeuronInChisel/generated/lut.txt").getLines().toArray
             for (i <- 0 until 1023){
                 dut.io.address.poke(i.U)
                 dut.clock.step()
