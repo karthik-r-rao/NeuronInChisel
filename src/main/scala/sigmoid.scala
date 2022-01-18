@@ -1,4 +1,4 @@
-package sigmoid
+package neuron
 
 import chisel3._
 import chisel3.util.experimental.loadMemoryFromFile   

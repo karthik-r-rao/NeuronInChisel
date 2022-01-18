@@ -1,11 +1,11 @@
-package sigmoidtests
+package neurontests
 
 import chisel3._
 import chiseltest._
 import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
 import scala.io.Source
-import sigmoid._ 
+import neuron._ 
 
 class SigmoidSpec extends AnyFlatSpec with ChiselScalatestTester{
     "Tester" should "pass" in{
