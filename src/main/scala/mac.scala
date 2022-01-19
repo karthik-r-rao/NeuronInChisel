@@ -6,22 +6,22 @@ class MultiplyAccumulateInterfaceIn(dataWidth: Int) extends Bundle{
     val reset = Input(Bool())
     
     // data signals
-    val bias_in = Input(Bits(dataWidth.W))
-    val weight_in = Input(Bits(dataWidth.W))
-    val data_in = Input(Bits(dataWidth.W))
+    val bias = Input(Bits(dataWidth.W))
+    val weight = Input(Bits(dataWidth.W))
+    val data = Input(Bits(dataWidth.W))
 
     // control signals
-    val bias_in_valid = Input(Bool())
-    val weight_in_valid = Input(Bool())
-    val data_in_valid = Input(Bool())
+    val bias_valid = Input(Bool())
+    val weight_valid = Input(Bool())
+    val data_valid = Input(Bool())
 }
 
 class MultiplyAccumulateInterfaceOut(dataWidth: Int) extends Bundle{
     // data signals
-    val data_out = Output(Bits(dataWidth.W))
+    val data = Output(Bits(dataWidth.W))
 
     // control signals
-    val data_out_valid = Output(Bool())
+    val valid = Output(Bool())
 }
 
 class MultiplyAccumulate(dataWidth: Int) extends Module{
@@ -34,24 +34,24 @@ class MultiplyAccumulate(dataWidth: Int) extends Module{
     val acc = RegInit(0.U(dataWidth.W))
     val acc_valid = RegInit(false.B)
 
-    input_valid := io.mac_in.weight_in_valid & io.mac_in.data_in_valid
+    input_valid := io.mac_in.weight_valid & io.mac_in.data_valid
 
     when (io.mac_in.reset){
         acc := 0.U
     }
 
     when (input_valid){
-        multiply := io.mac_in.weight_in * io.mac_in.data_in
+        multiply := io.mac_in.weight * io.mac_in.data
         acc := acc + multiply
     }
 
-    when (io.mac_in.bias_in_valid){
-        acc := acc + io.mac_in.bias_in
+    when (io.mac_in.bias_valid){
+        acc := acc + io.mac_in.bias
         acc_valid := true.B
     }
 
-    io.mac_out.data_out := acc
-    io.mac_out.data_out_valid := acc_valid
+    io.mac_out.data := acc
+    io.mac_out.valid := acc_valid
 }
 
 object DriverMultiplyAccumulate extends App{
