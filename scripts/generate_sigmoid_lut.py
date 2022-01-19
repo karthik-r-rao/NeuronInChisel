@@ -6,6 +6,7 @@
 import sys
 import numpy as np
 import math 
+import matplotlib.pyplot as plt
 
 # sigmoid function
 def sigmoid(x):
@@ -18,13 +19,20 @@ if __name__ == "__main__":
     FRACTION_WIDTH = int(sys.argv[3])
     LUT_SIZE = 2 ** DATA_WIDTH
 
-    high = (2 ** (DATA_WIDTH - FRACTION_WIDTH - 1)) - (2 ** (-FRACTION_WIDTH))
-    low = -(2 ** (DATA_WIDTH - FRACTION_WIDTH - 1))
-    print(f"low: {low} \nhigh: {high}")
+    fixed_point_high = (2 ** (DATA_WIDTH - FRACTION_WIDTH - 1)) - (2 ** (-FRACTION_WIDTH))
+    fixed_point_low = -(2 ** (DATA_WIDTH - FRACTION_WIDTH - 1))
+    unsigned_high = (2 ** DATA_WIDTH) - 1
+    unsigned_low = 0
+    print(f"fixed low: {fixed_point_low} \nfixed high: {fixed_point_high} \nunsigned low: {unsigned_low} \nunsigned high: {unsigned_high}")
 
-    values = np.linspace(low, high, LUT_SIZE, endpoint=True)
+    values = (np.arange(unsigned_low, unsigned_high + 1)) / (2 ** FRACTION_WIDTH)
+    fixed_point_values = np.copy(values)
+    for i in range(fixed_point_values.shape[0]):
+        if i >= 2 ** (DATA_WIDTH - 1):
+            fixed_point_values[i] -= 2 ** (DATA_WIDTH - FRACTION_WIDTH)
+
     sigmoid_vector_function = np.vectorize(sigmoid)
-    sigmoid_vector = sigmoid_vector_function(values)
+    sigmoid_vector = sigmoid_vector_function(fixed_point_values)
     bins = np.digitize(sigmoid_vector, values)
     sigmoid_fixed_point = values[bins]
 
@@ -34,4 +42,7 @@ if __name__ == "__main__":
         for val in sigmoid_fixed_point_scaled:
             f.write(f"{bin(val)[2:].zfill(DATA_WIDTH)}\n")
 
-    print(f"Done writing {FILE}!")
+    print("Done writing!")
+
+    plt.plot(sigmoid_fixed_point)
+    plt.show()
