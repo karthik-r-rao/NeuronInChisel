@@ -32,16 +32,6 @@ class NeuronSpec extends AnyFlatSpec with ChiselScalatestTester{
 
                 dut.clock.step()
 
-                weight_in = Random.between(0, 16)
-                data_in = Random.between(0, 16)
-                acc = acc + weight_in * data_in
-                dut.io.neuron_in.weight_valid.poke(true.B)
-                dut.io.neuron_in.data_valid.poke(true.B)
-                dut.io.neuron_in.weight.poke(weight_in.U)
-                dut.io.neuron_in.data.poke(data_in.U)
-
-                dut.clock.step()
-
                 var bias_in = Random.between(0, 16)
                 acc = acc + bias_in
                 dut.io.neuron_in.bias_valid.poke(true.B)
