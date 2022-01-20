@@ -3,6 +3,7 @@ package neuron
 import chisel3._
 import chisel3.util.experimental.loadMemoryFromFile   
 import firrtl.annotations.MemoryLoadFileType
+import scala.io.Source
 
 class SigmoidLutInterfaceIn(memoryWidth: Int) extends Bundle{
     // data signals
@@ -37,7 +38,8 @@ class SigmoidLut(memoryDepth: Int, memoryWidth: Int) extends Module{
     io.sigmoid_lut_out.data := data
     io.sigmoid_lut_out.valid := valid
 
-    loadMemoryFromFile(memory, "/home/karthikrrao/NeuronInChisel/generated/lut.txt", MemoryLoadFileType.Binary)  
+    val path = getClass.getResource("/lut.txt").getPath
+    loadMemoryFromFile(memory, path, MemoryLoadFileType.Binary)  
 }
 
 object DriverSigmoidLut extends App{
