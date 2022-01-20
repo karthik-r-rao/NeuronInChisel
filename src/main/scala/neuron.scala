@@ -20,3 +20,7 @@ class Neuron(memoryDepth: Int, dataWidth: Int) extends Module{
     // make connections between modules
     sigmoid.io.sigmoid_lut_in <> mac.io.mac_out
 }
+
+object DriverNeuron extends App{
+    (new chisel3.stage.ChiselStage).emitVerilog(new Neuron(1024, 10), Array("--target-dir", "generated/"))
+}
