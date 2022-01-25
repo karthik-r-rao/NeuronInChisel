@@ -6,6 +6,6 @@
 2. Clone the repo
 
 ```
-git clone https://github.com/karthik-r-rao/neural-net-in-chisel
-cd neural-net-in-chisel
+git clone https://github.com/karthik-r-rao/neural-net-chisel
+cd neural-net-chisel
 ```
