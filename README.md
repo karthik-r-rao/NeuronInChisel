@@ -1,6 +1,4 @@
-# Implementation of Neural Network in Chisel
-
-Implementation of a Neuron, the basic processing element of an ANN, in Chisel. 
+# Implementation of a Neural Network in Chisel
 
 ## Getting started
 
