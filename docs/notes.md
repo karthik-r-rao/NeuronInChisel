@@ -21,14 +21,14 @@
     - Hyperbolic Tangent
         - Kwan second-order approximation 
     - ReLU
-    - Softmax ####(Maybe)
+    - Softmax (Maybe)
 ## Control Unit
 
 ### IMPORTANT
-    - Table keeping address of each datapoint in the dataset, (along with computed activations) in the main memory
-    - To generate (0-m) in a cycle that is sent both to Weight Memory for weights and datapoint memory for the datapoint.
-    - Save the computed activations in Main memory and Update the addresses of these activations in the table
+- Table keeping address of each datapoint in the dataset, (along with computed activations) in the main memory
+- To generate (0-m) in a cycle that is sent both to Weight Memory for weights and datapoint memory for the datapoint.
+- Save the computed activations in Main memory and Update the addresses of these activations in the table
 
 ### Additional
-    - Different running types for training and testing of the neural network.
-    - Including parameters like "Batch_size"
+- Different running types for training and testing of the neural network.
+- Including parameters like "Batch_size"
