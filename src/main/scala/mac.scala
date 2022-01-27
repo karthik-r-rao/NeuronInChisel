@@ -1,27 +1,19 @@
-package neuron
+package nn
 
 import chisel3._
 
 class MultiplyAccumulateInterfaceIn(dataWidth: Int) extends Bundle{
-    val reset = Input(Bool())
-    
-    // data signals
-    val bias = Input(Bits(dataWidth.W))
-    val weight = Input(Bits(dataWidth.W))
-    val data = Input(Bits(dataWidth.W))
+    // reset MAC
+    val rst = Input(Bool())
 
-    // control signals
-    val bias_valid = Input(Bool())
-    val weight_valid = Input(Bool())
-    val data_valid = Input(Bool())
+    // data signals
+    val bias = Input(new NNWire(dataWidth))
+    val weight = Input(new NNWire(dataWidth))
+    val x = Input(new NNWire(dataWidth))
 }
 
 class MultiplyAccumulateInterfaceOut(dataWidth: Int) extends Bundle{
-    // data signals
-    val data = Output(Bits(dataWidth.W))
-
-    // control signals
-    val valid = Output(Bool())
+    val y = Output(new NNWire(dataWidth))
 }
 
 class MultiplyAccumulate(dataWidth: Int) extends Module{
@@ -34,24 +26,24 @@ class MultiplyAccumulate(dataWidth: Int) extends Module{
     val acc = RegInit(0.U(dataWidth.W))
     val acc_valid = RegInit(false.B)
 
-    input_valid := io.mac_in.weight_valid & io.mac_in.data_valid
+    input_valid := io.mac_in.weight.valid & io.mac_in.x.valid
 
-    when (io.mac_in.reset){
+    when (io.mac_in.rst){
         acc := 0.U
     }
 
     when (input_valid){
-        multiply := io.mac_in.weight * io.mac_in.data
+        multiply := io.mac_in.weight.data * io.mac_in.x.data
         acc := acc + multiply
     }
 
-    when (io.mac_in.bias_valid){
-        acc := acc + io.mac_in.bias
+    when (io.mac_in.bias.valid){
+        acc := acc + io.mac_in.bias.data
         acc_valid := true.B
     }
 
-    io.mac_out.data := acc
-    io.mac_out.valid := acc_valid
+    io.mac_out.y.data := acc
+    io.mac_out.y.valid := acc_valid
 }
 
 object DriverMultiplyAccumulate extends App{
