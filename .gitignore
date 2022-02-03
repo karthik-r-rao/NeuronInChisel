@@ -2,4 +2,4 @@ target
 generated
 project
 test_run_dir
-!scripts/*.py
+scripts/*.png

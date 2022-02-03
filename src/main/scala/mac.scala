@@ -21,12 +21,13 @@ class MultiplyAccumulate(dataWidth: Int) extends Module{
         val mac_in = new MultiplyAccumulateInterfaceIn(dataWidth)
         val mac_out = new MultiplyAccumulateInterfaceOut(dataWidth)
     })
-    val multiply = WireDefault(0.U(dataWidth.W))
+    val multiply = Wire(Bits(dataWidth.W))
     val input_valid = Wire(Bool())
     val acc = RegInit(0.U(dataWidth.W))
     val acc_valid = RegInit(false.B)
 
     input_valid := io.mac_in.weight.valid & io.mac_in.x.valid
+    multiply := 0.U
 
     when (io.mac_in.rst){
         acc := 0.U
