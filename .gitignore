@@ -2,3 +2,4 @@ target
 generated
 project
 test_run_dir
+!*.py
