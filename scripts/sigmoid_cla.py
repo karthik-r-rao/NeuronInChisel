@@ -17,9 +17,9 @@ def sigmoid(x):
 
 if __name__ == "__main__":
     # set fixed point parameters 
-    INT_WIDTH = 16
-    FRAC_WIDTH = 16
-    nums = np.linspace(-5, 5, num=2000, endpoint=True) 
+    INT_WIDTH = 6
+    FRAC_WIDTH = 12
+    nums = np.linspace(-5, 5, num=20000, endpoint=True) 
 
     y_actual = []
     y_cla = []
@@ -27,7 +27,7 @@ if __name__ == "__main__":
 
     for num in nums:
         x = fp.FixedPoint(num, signed=True, m=INT_WIDTH, n=FRAC_WIDTH)
-        integer = x.bits[:FRAC_WIDTH]
+        integer = x.bits[INT_WIDTH + FRAC_WIDTH - 1:FRAC_WIDTH]
         frac = x.bits[FRAC_WIDTH - 1: 0]
 
         # true value
