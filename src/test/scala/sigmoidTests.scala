@@ -46,7 +46,7 @@ class SigmoidCLASpec extends AnyFlatSpec with ChiselScalatestTester{
                 // positive numbers
                 dut.io.sigmoid_cla_in.valid.poke(true.B)
                 dut.io.sigmoid_cla_in.data.poke(input.toInt.U)
-                dut.clock.step()
+                dut.clock.step(2)
                 output = (dut.io.sigmoid_cla_out.data.peek().litValue.toDouble) / scala.math.pow(2, fracWidth)
                 expected = findSigmoid(input_scaled)
                 error = scala.math.abs(output - expected)   // absolute error
@@ -70,7 +70,7 @@ class SigmoidCLASpec extends AnyFlatSpec with ChiselScalatestTester{
                 var input_2s = (~input + 1) & (minus_one)
                 dut.io.sigmoid_cla_in.valid.poke(true.B)
                 dut.io.sigmoid_cla_in.data.poke(("h" + input_2s.toHexString).U)
-                dut.clock.step()
+                dut.clock.step(2)
                 output = (dut.io.sigmoid_cla_out.data.peek().litValue.toDouble) / scala.math.pow(2, fracWidth)
                 expected = findSigmoid(-input_scaled)
                 error = scala.math.abs(output - expected)   // absolute error
