@@ -9,24 +9,24 @@ import chisel3._
 
 class SigmoidCLA(intWidth: Int, fracWidth: Int) extends Module{
     val io = IO(new Bundle{
-        val sigmoid_cla_in = Input(new NNWire(intWidth + fracWidth))
-        val sigmoid_cla_out = Output(new NNWire(intWidth + fracWidth))
+        val sigmoid_cla_in = Input(new NNWireSigned(intWidth + fracWidth))
+        val sigmoid_cla_out = Output(new NNWireSigned(intWidth + fracWidth))
     })
 
     // pipe regs
     // stage0
-    val i0 = RegInit(0.U(intWidth.W))
-    val f0 = RegInit(0.U(fracWidth.W))
+    val i0 = Reg(UInt(intWidth.W))
+    val f0 = Reg(UInt(fracWidth.W))
     val in_valid0 = RegNext(io.sigmoid_cla_in.valid)
 
     // stage1
-    val out1 = RegInit(0.U((intWidth + fracWidth).W))
+    val out1 = Reg(UInt((intWidth + fracWidth).W))
     val out_valid1 = RegNext(in_valid0)
     
     // wires
-    val y = Wire(Bits((intWidth + fracWidth).W))
-    val i = Wire(Bits(intWidth.W))
-    val f = Wire(Bits(fracWidth.W))
+    val y = Wire(UInt((intWidth + fracWidth).W))
+    val i = Wire(UInt(intWidth.W))
+    val f = Wire(UInt(fracWidth.W))
     val sign = Wire(Bool())
 
     val one = scala.math.pow(2, fracWidth).toInt.U((intWidth + fracWidth).W)
@@ -48,7 +48,7 @@ class SigmoidCLA(intWidth: Int, fracWidth: Int) extends Module{
         out_valid1 := false.B
     }
 
-    io.sigmoid_cla_out.data := out1
+    io.sigmoid_cla_out.data := out1.asSInt
     io.sigmoid_cla_out.valid := out_valid1
 }
 
