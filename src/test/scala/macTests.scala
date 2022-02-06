@@ -1,42 +1,82 @@
 package nntests
 
-import chisel3._
-import chiseltest._
 import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
+import scala.util.Random
+
+import chisel3._
+import chiseltest._
 import chiseltest.simulator.WriteVcdAnnotation
 import nn._ 
 
 class MultiplyAccumulateSpec extends AnyFlatSpec with ChiselScalatestTester{
-    "Tester" should "pass" in{
-        test(new MultiplyAccumulate(10)).withAnnotations(Seq(WriteVcdAnnotation)) { dut => 
-            dut.io.mac_in.rst.poke(true.B)
-            dut.io.mac_in.weight.valid.poke(false.B)
-            dut.io.mac_in.x.valid.poke(false.B)
-            dut.io.mac_in.bias.valid.poke(false.B)
-            
-            dut.clock.step()
 
-            val weight_in = 15
-            val data_in = 27
-            dut.io.mac_in.weight.valid.poke(true.B)
-            dut.io.mac_in.x.valid.poke(true.B)
-            dut.io.mac_in.weight.data.poke(weight_in.U)
-            dut.io.mac_in.x.data.poke(data_in.U)
+    // change parameters here
+    val intWidth = 6
+    val fracWidth = 12
+    val num_test_vec = 10000
+    val tolerance = 0.005
 
-            dut.clock.step()
+    def checker(x: Double): Boolean = {
+        if (x < tolerance)
+            return true
+        return false
+    } 
 
-            val bias_in = 21
-            dut.io.mac_in.bias.valid.poke(true.B)
-            dut.io.mac_in.weight.valid.poke(false.B)
-            dut.io.mac_in.x.valid.poke(false.B)
-            dut.io.mac_in.bias.data.poke(bias_in.U)
+    "macTester" should "pass" in{
+        test(new MultiplyAccumulate(intWidth, fracWidth)).withAnnotations(Seq(WriteVcdAnnotation)) { dut => 
 
-            dut.clock.step()
+            // stats variables
+            var num_passed = 0
+            var error = 0.0
 
-            dut.io.mac_out.y.data.expect((weight_in * data_in + bias_in).U)
+            // true and approx outputs
+            var expected = 0.0
+            var output = 0.0
 
-            dut.clock.step()
+            for (w <- 0 until num_test_vec){
+                dut.io.mac_in.rst.poke(true.B)
+                dut.io.mac_in.weight.valid.poke(false.B)
+                dut.io.mac_in.x.valid.poke(false.B)
+                dut.io.mac_in.bias.valid.poke(false.B)
+                
+                dut.clock.step()
+
+                var weight_in = Random.between(-scala.math.pow(2, fracWidth-1).toInt, scala.math.pow(2, fracWidth-1).toInt)
+                var data_in = Random.between(-scala.math.pow(2, fracWidth-1).toInt, scala.math.pow(2, fracWidth-1).toInt)
+                var bias_in = Random.between(-scala.math.pow(2, fracWidth-1).toInt, scala.math.pow(2, fracWidth-1).toInt)
+                var dut_weight_in = weight_in.S
+                var dut_data_in = data_in.S
+                var dut_bias_in = bias_in.S
+
+                dut.io.mac_in.weight.valid.poke(true.B)
+                dut.io.mac_in.x.valid.poke(true.B)
+                dut.io.mac_in.weight.data.poke(dut_weight_in)
+                dut.io.mac_in.x.data.poke(dut_data_in)
+                dut.clock.step()
+                dut.io.mac_in.bias.valid.poke(true.B)
+                dut.io.mac_in.weight.valid.poke(false.B)
+                dut.io.mac_in.x.valid.poke(false.B)
+                dut.io.mac_in.bias.data.poke(dut_bias_in)
+
+                dut.clock.step()
+
+                expected = ((weight_in * data_in) / (scala.math.pow(2, 2*fracWidth))) + (bias_in / (scala.math.pow(2, fracWidth)))
+                output = (dut.io.mac_out.y.data.peek().litValue.toDouble) / scala.math.pow(2, fracWidth)
+                var error = scala.math.abs(expected - output)
+
+                if (checker(error))
+                    num_passed = num_passed + 1
+                else
+                    println(s"[test] W: ${weight_in} X: ${data_in} B: ${bias_in} Exp: ${expected} Out: ${output} Err: ${error}")
+                
+                dut.clock.step()
+            }
+            println("[test] Test completed")
+            println("[test] === Test statistics ===")
+            println(s"[test] Number of test vectors: ${num_test_vec}")
+            println(s"[test] Number of test vectors passed: ${num_passed}")
+            println(s"[test] Test success rate: ${num_passed / (num_test_vec)}")
         }
     }
 }
