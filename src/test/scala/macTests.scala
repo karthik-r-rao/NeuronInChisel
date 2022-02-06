@@ -76,7 +76,7 @@ class MultiplyAccumulateSpec extends AnyFlatSpec with ChiselScalatestTester{
             println("[test] === Test statistics ===")
             println(s"[test] Number of test vectors: ${num_test_vec}")
             println(s"[test] Number of test vectors passed: ${num_passed}")
-            println(s"[test] Test success rate: ${num_passed / (num_test_vec)}")
+            println(s"[test] Test success rate: ${num_passed / (1.0 * num_test_vec)}")
         }
     }
 }
