@@ -14,7 +14,7 @@ class SigmoidCLASpec extends AnyFlatSpec with ChiselScalatestTester{
     // change parameters here
     val intWidth = 6
     val fracWidth = 12
-    val num_test_vec = 10000
+    val num_test_vec = 100
     val tolerance = 0.05
       
     def findSigmoid(x: Double): Double = {

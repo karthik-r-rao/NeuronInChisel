@@ -12,14 +12,10 @@ class MultiplyAccumulateInterfaceIn(intWidth: Int, fracWidth: Int) extends Bundl
     val x = Input(new NNWireSigned(intWidth + fracWidth))
 }
 
-class MultiplyAccumulateInterfaceOut(intWidth: Int, fracWidth: Int) extends Bundle{
-    val y = Output(new NNWireSigned(intWidth + fracWidth))
-}
-
 class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
     val io = IO(new Bundle{
         val mac_in = new MultiplyAccumulateInterfaceIn(intWidth, fracWidth)
-        val mac_out = new MultiplyAccumulateInterfaceOut(intWidth, fracWidth)
+        val mac_out = Output(new NNWireSigned(intWidth + fracWidth))
     })
     val multiply = Wire(SInt((2*intWidth + 2*fracWidth).W)) // multiplication; twice the number of bits
     val input_valid = Wire(Bool())
@@ -45,8 +41,8 @@ class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
         acc_valid := false.B
     }
 
-    io.mac_out.y.data := acc
-    io.mac_out.y.valid := acc_valid
+    io.mac_out.data := acc
+    io.mac_out.valid := acc_valid
 }
 
 object DriverMultiplyAccumulate extends App{
