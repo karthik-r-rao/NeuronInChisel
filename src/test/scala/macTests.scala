@@ -14,7 +14,7 @@ class MultiplyAccumulateSpec extends AnyFlatSpec with ChiselScalatestTester{
     // change parameters here
     val intWidth = 6
     val fracWidth = 12
-    val num_test_vec = 10000
+    val num_test_vec = 100
     val tolerance = 0.005
 
     def checker(x: Double): Boolean = {
@@ -36,9 +36,8 @@ class MultiplyAccumulateSpec extends AnyFlatSpec with ChiselScalatestTester{
 
             for (w <- 0 until num_test_vec){
                 dut.io.mac_in.rst.poke(true.B)
-                dut.io.mac_in.weight.valid.poke(false.B)
-                dut.io.mac_in.x.valid.poke(false.B)
-                dut.io.mac_in.bias.valid.poke(false.B)
+                dut.io.mac_in.op1.valid.poke(false.B)
+                dut.io.mac_in.op2.valid.poke(false.B)
                 
                 dut.clock.step()
 
@@ -50,20 +49,22 @@ class MultiplyAccumulateSpec extends AnyFlatSpec with ChiselScalatestTester{
                 var dut_bias_in = bias_in.S
 
                 dut.io.mac_in.rst.poke(false.B)
-                dut.io.mac_in.weight.valid.poke(true.B)
-                dut.io.mac_in.x.valid.poke(true.B)
-                dut.io.mac_in.weight.data.poke(dut_weight_in)
-                dut.io.mac_in.x.data.poke(dut_data_in)
+                dut.io.mac_in.op1.valid.poke(true.B)
+                dut.io.mac_in.op2.valid.poke(true.B)
+                dut.io.mac_in.bias.poke(false.B)
+                dut.io.mac_in.op1.data.poke(dut_data_in)
+                dut.io.mac_in.op2.data.poke(dut_weight_in)
                 dut.clock.step()
-                dut.io.mac_in.bias.valid.poke(true.B)
-                dut.io.mac_in.weight.valid.poke(false.B)
-                dut.io.mac_in.x.valid.poke(false.B)
-                dut.io.mac_in.bias.data.poke(dut_bias_in)
+                dut.io.mac_in.op1.valid.poke(true.B)
+                dut.io.mac_in.op2.valid.poke(true.B)
+                dut.io.mac_in.bias.poke(true.B)
+                dut.io.mac_in.op1.data.poke(1.S)
+                dut.io.mac_in.op2.data.poke(dut_bias_in)
 
                 dut.clock.step()
 
                 expected = ((weight_in * data_in) / (scala.math.pow(2, 2*fracWidth))) + (bias_in / (scala.math.pow(2, fracWidth)))
-                output = (dut.io.mac_out.data.peek().litValue.toDouble) / scala.math.pow(2, fracWidth)
+                output = (dut.io.mac_out.data.peek().litValue.toDouble) / scala.math.pow(2, 2*fracWidth)
                 var error = scala.math.abs(expected - output)
 
                 if (checker(error))
