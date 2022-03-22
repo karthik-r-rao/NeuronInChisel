@@ -9,6 +9,8 @@ class MultiplyAccumulateInterfaceIn(intWidth: Int, fracWidth: Int) extends Bundl
     // data signals
     val op1 = Input(new NNWireSigned(intWidth + fracWidth))
     val op2 = Input(new NNWireSigned(intWidth + fracWidth))
+
+    // bias valid 
     val bias = Input(Bool())
 }
 
@@ -17,9 +19,13 @@ class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
         val mac_in = new MultiplyAccumulateInterfaceIn(intWidth, fracWidth)
         val mac_out = Output(new NNWireSigned(2*intWidth + 2*fracWidth))
     })
-    val multiply = Wire(SInt((2*intWidth + 2*fracWidth).W)) // multiplication; twice the number of bits
+
+    // wires
     val input_valid = Wire(Bool())
+    val multiply = Wire(SInt((2*intWidth + 2*fracWidth).W)) // multiplication; twice the number of bits
     val op1 = Wire(SInt((intWidth + fracWidth).W))
+
+    // registers
     val acc = Reg(SInt((2*intWidth + 2*fracWidth).W))
     val acc_valid = Reg(Bool())
 
@@ -28,14 +34,14 @@ class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
     acc_valid := false.B
 
     when (io.mac_in.bias) {
-        op1 := io.mac_in.op1.data << fracWidth
+        op1 := io.mac_in.op1.data << fracWidth  // shift to make 1 in fixed point 
     }
     .otherwise {
         op1 := io.mac_in.op1.data
     }
 
     when (io.mac_in.rst){
-        acc := 0.S
+        acc := 0.S  // reset MAC
     }
 
     when (input_valid){

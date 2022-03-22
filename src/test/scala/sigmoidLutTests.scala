@@ -2,7 +2,6 @@ package nntests
 
 import org.scalatest._
 import org.scalatest.flatspec.AnyFlatSpec
-import scala.util.Random
 import scala.io.Source
 
 import chisel3._
@@ -15,11 +14,9 @@ class SigmoidLutSpec extends AnyFlatSpec with ChiselScalatestTester{
     // change parameters here
     val intWidth = 3
     val fracWidth = 7
-    val dataWidth = intWidth + fracWidth
-    val addressWidth = 10
 
     "sigmoidLutTester" should "pass" in{
-        test(new SigmoidLut(addressWidth, dataWidth)).withAnnotations(Seq(WriteVcdAnnotation)) { dut => 
+        test(new SigmoidLut(intWidth, fracWidth)).withAnnotations(Seq(WriteVcdAnnotation)) { dut => 
 
             // stats variables
             var num_passed = 0
@@ -46,7 +43,7 @@ class SigmoidLutSpec extends AnyFlatSpec with ChiselScalatestTester{
                 dut.io.write.poke(false.B)
                 dut.io.addr.poke(w.U)
                 dut.clock.step()
-                var output = dut.io.dataOut.peek().litValue.toInt
+                var output = dut.io.dataOut.data.peek().litValue.toInt
                 var expected = Integer.parseInt(lut_values(w), 2)
                 
                 if (output == expected)

@@ -2,19 +2,22 @@ package nn
 
 import chisel3._
 
-class SigmoidLut(addressWidth: Int, dataWidth: Int) extends Module {
+class SigmoidLut(intWidth: Int, fracWidth: Int) extends Module {
+    val addressWidth = intWidth + fracWidth
+    val dataWidth = intWidth + fracWidth
     val io = IO(new Bundle {
-        val enable = Input(Bool())
-        val write = Input(Bool())
-        val addr = Input(UInt(addressWidth.W))
-        val dataIn = Input(UInt(dataWidth.W))
-        val dataOut = Output(UInt(dataWidth.W))
+        val enable = Input(Bool())  // mem enable
+        val write = Input(Bool())   // write enable
+        val addr = Input(UInt(addressWidth.W))  
+        val dataIn = Input(UInt(dataWidth.W))   // write data
+        val dataOut = Output(new NNWireUnsigned(dataWidth)) // read data
     })
 
     val depth = scala.math.pow(2, addressWidth).toInt
     val mem = SyncReadMem(depth, UInt(dataWidth.W))
     
-    io.dataOut := DontCare
+    io.dataOut.data := DontCare
+    io.dataOut.valid := RegNext(io.enable)
 
     when(io.enable) {
         val rdwrPort = mem(io.addr)
@@ -22,11 +25,11 @@ class SigmoidLut(addressWidth: Int, dataWidth: Int) extends Module {
             rdwrPort := io.dataIn
         }
         .otherwise { 
-            io.dataOut := rdwrPort 
+            io.dataOut.data := rdwrPort 
         }
     }
 }
 
 object DriverSigmoidLut extends App{
-    (new chisel3.stage.ChiselStage).emitVerilog(new SigmoidLut(10, 10), Array("--target-dir", "generated/"))
+    (new chisel3.stage.ChiselStage).emitVerilog(new SigmoidLut(3, 7), Array("--target-dir", "generated/"))
 }
