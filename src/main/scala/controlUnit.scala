@@ -48,7 +48,6 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int) extends Mo
     val next_state = RegInit(idle)
     
     val current_layer = RegInit(0.U(datawidth.W))
-    val next_layer = RegInit(0.U(datawidth.W))
     
     val current_layer_total_activations = RegInit(0.U(datawidth.W))
     val current_layer_current_activation = RegInit(0.U(datawidth.W))
@@ -72,10 +71,19 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int) extends Mo
     	
     	    when(current_layer == max_layer && current_layer_current_activation == current_layer_total_activations){
     	    	io.controller_out.load_datapoint = true
+    	    	
+    	    }	.elsewhen(current_layer_current_activation == current_layer_total_activation){
+    	    	
+    	    	current_layer_max_computation = current_layer_total_activations
+    	    	current_layer = current_layer + 1
+    	    	
+    	    	current_layer_total_activations = //get from table
+    	    	
+    	    	io.controller_out.load_datapoint = true
+    	    	io.controller_out.load_data_from_buffer = true
+    	    	
+    	    
     	    }
-		    	
-    	    
-    	    
     	
     	}
     	
