@@ -2,50 +2,58 @@ package nn
 
 import chisel3._
 
-class MultiplyAccumulateInterfaceIn(dataWidth: Int) extends Bundle{
+class MultiplyAccumulateInterfaceIn(intWidth: Int, fracWidth: Int) extends Bundle{
     // reset MAC
     val rst = Input(Bool())
 
     // data signals
-    val bias = Input(new NNWire(dataWidth))
-    val weight = Input(new NNWire(dataWidth))
-    val x = Input(new NNWire(dataWidth))
+    val op1 = Input(new NNWireSigned(intWidth + fracWidth))
+    val op2 = Input(new NNWireSigned(intWidth + fracWidth))
+
+    // bias valid 
+    val bias = Input(Bool())
 }
 
-class MultiplyAccumulateInterfaceOut(dataWidth: Int) extends Bundle{
-    val y = Output(new NNWire(dataWidth))
-}
-
-class MultiplyAccumulate(dataWidth: Int) extends Module{
+class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
     val io = IO(new Bundle{
-        val mac_in = new MultiplyAccumulateInterfaceIn(dataWidth)
-        val mac_out = new MultiplyAccumulateInterfaceOut(dataWidth)
+        val mac_in = new MultiplyAccumulateInterfaceIn(intWidth, fracWidth)
+        val mac_out = Output(new NNWireSigned(2*intWidth + 2*fracWidth))
     })
-    val multiply = WireDefault(0.U(dataWidth.W))
-    val input_valid = Wire(Bool())
-    val acc = RegInit(0.U(dataWidth.W))
-    val acc_valid = RegInit(false.B)
 
-    input_valid := io.mac_in.weight.valid & io.mac_in.x.valid
+    // wires
+    val input_valid = Wire(Bool())
+    val multiply = Wire(SInt((2*intWidth + 2*fracWidth).W)) // multiplication; twice the number of bits
+    val op1 = Wire(SInt((intWidth + fracWidth).W))
+
+    // registers
+    val acc = Reg(SInt((2*intWidth + 2*fracWidth).W))
+    val acc_valid = Reg(Bool())
+
+    input_valid := io.mac_in.op1.valid & io.mac_in.op2.valid
+    multiply := 0.S
+    acc_valid := false.B
+
+    when (io.mac_in.bias) {
+        op1 := io.mac_in.op1.data << fracWidth  // shift to make 1 in fixed point 
+    }
+    .otherwise {
+        op1 := io.mac_in.op1.data
+    }
 
     when (io.mac_in.rst){
-        acc := 0.U
+        acc := 0.S  // reset MAC
     }
 
     when (input_valid){
-        multiply := io.mac_in.weight.data * io.mac_in.x.data
+        multiply := op1.asSInt * io.mac_in.op2.data.asSInt
         acc := acc + multiply
-    }
-
-    when (io.mac_in.bias.valid){
-        acc := acc + io.mac_in.bias.data
         acc_valid := true.B
     }
 
-    io.mac_out.y.data := acc
-    io.mac_out.y.valid := acc_valid
+    io.mac_out.data := acc
+    io.mac_out.valid := acc_valid
 }
 
 object DriverMultiplyAccumulate extends App{
-    (new chisel3.stage.ChiselStage).emitVerilog(new MultiplyAccumulate(10), Array("--target-dir", "generated/"))
+    (new chisel3.stage.ChiselStage).emitVerilog(new MultiplyAccumulate(6, 12), Array("--target-dir", "generated/"))
 }
