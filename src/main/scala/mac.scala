@@ -7,8 +7,8 @@ class MultiplyAccumulateInterfaceIn(intWidth: Int, fracWidth: Int) extends Bundl
     val rst = Input(Bool())
 
     // data signals
-    val op1 = Input(new NNWireSigned(intWidth + fracWidth))
-    val op2 = Input(new NNWireSigned(intWidth + fracWidth))
+    val op1 = Input(SInt((intWidth + fracWidth).W))
+    val op2 = Input(SInt((intWidth + fracWidth).W))
 
     // bias valid 
     val bias = Input(Bool())
@@ -17,41 +17,34 @@ class MultiplyAccumulateInterfaceIn(intWidth: Int, fracWidth: Int) extends Bundl
 class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
     val io = IO(new Bundle{
         val mac_in = new MultiplyAccumulateInterfaceIn(intWidth, fracWidth)
-        val mac_out = Output(new NNWireSigned(2*intWidth + 2*fracWidth))
+        val mac_out = Output(SInt((2*intWidth + 2*fracWidth).W))
     })
 
     // wires
-    val input_valid = Wire(Bool())
     val multiply = Wire(SInt((2*intWidth + 2*fracWidth).W)) // multiplication; twice the number of bits
     val op1 = Wire(SInt((intWidth + fracWidth).W))
 
     // registers
     val acc = Reg(SInt((2*intWidth + 2*fracWidth).W))
-    val acc_valid = Reg(Bool())
 
-    input_valid := io.mac_in.op1.valid & io.mac_in.op2.valid
     multiply := 0.S
-    acc_valid := false.B
 
     when (io.mac_in.bias) {
-        op1 := io.mac_in.op1.data << fracWidth  // shift to make 1 in fixed point 
+        op1 := io.mac_in.op1 << fracWidth  // shift to make 1 in fixed point 
     }
     .otherwise {
-        op1 := io.mac_in.op1.data
+        op1 := io.mac_in.op1
     }
 
     when (io.mac_in.rst){
         acc := 0.S  // reset MAC
     }
-
-    when (input_valid){
-        multiply := op1.asSInt * io.mac_in.op2.data.asSInt
+    .otherwise {
+        multiply := op1.asSInt * io.mac_in.op2.asSInt
         acc := acc + multiply
-        acc_valid := true.B
     }
 
-    io.mac_out.data := acc
-    io.mac_out.valid := acc_valid
+    io.mac_out := acc
 }
 
 object DriverMultiplyAccumulate extends App{

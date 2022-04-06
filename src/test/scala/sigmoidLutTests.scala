@@ -29,7 +29,6 @@ class SigmoidLutSpec extends AnyFlatSpec with ChiselScalatestTester{
                 var input = lut_values(w)
                 var dut_in = ("b" + input).U
 
-                dut.io.enable.poke(true.B)
                 dut.io.write.poke(true.B)
                 dut.io.addr.poke(w.U)
                 dut.io.dataIn.poke(dut_in)
@@ -39,11 +38,10 @@ class SigmoidLutSpec extends AnyFlatSpec with ChiselScalatestTester{
 
             // read back from LUT
             for (w <- 0 until lut_values.length){
-                dut.io.enable.poke(true.B)
                 dut.io.write.poke(false.B)
                 dut.io.addr.poke(w.U)
                 dut.clock.step()
-                var output = dut.io.dataOut.data.peek().litValue.toInt
+                var output = dut.io.dataOut.peek().litValue.toInt
                 var expected = Integer.parseInt(lut_values(w), 2)
                 
                 if (output == expected)
