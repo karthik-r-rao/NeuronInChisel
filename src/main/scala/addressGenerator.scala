@@ -40,7 +40,7 @@ class AddressGenerator(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numb
     when(io.address_generator_in.enable_valid){
 
 	for(j <- 0 until numberOfPE){
-	    enables(j) := memoryUnits(j)
+	    enables(j) := io.address_generator_in.memoryUnits(j)
 	}
 
     } .otherwise{
