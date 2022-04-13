@@ -37,6 +37,7 @@ class LoadPEMemoryInterfaceIn(memoryDepth: Int, memoryHeight: Int, datawidth: In
 //  Interconnect Input
     val interconnect_load_ready = Input(Bool())
     val interconnect_memory_output = Input(Bits(datawidth.W))
+
 }
 
 class LoadPEMemoryInterfaceOut(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE: Int) extends Bundle{
@@ -67,6 +68,11 @@ class LoadPEMemoryInterfaceOut(memoryDepth: Int, memoryHeight: Int, datawidth: I
     
     val current_load_weights_state = Output(Bits(datawidth.W))
     val current_load_datapoint_state = Output(Bits(datawidth.W))
+
+
+// Test signals
+    val current_pe = Output(Bits(datawidth.W))
+
 }
 
 class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE: Int) extends Module{
@@ -110,6 +116,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     val current_state = RegInit(idle2)
     
     val current_pe = RegInit(0.U(datawidth.W))
+    val next_pe = WireDefault(0.U(datawidth.W))
 
     val load_initial_weights_complete = RegInit(0.U(1.W))
     val load_buffer_weight_memory_complete = RegInit(0.U(1.W))
@@ -120,10 +127,14 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     
     
     
-    when(io.load_pe_memory_in.load_initial_weights || io.load_pe_memory_in.weight_buffer_load_request){
     	switch(current_state){
     	    is(idle2){
+    	    	load_initial_weights_complete := false.B
+    	    	load_buffer_weight_memory_complete := false.B
+
+
     	    	io.load_pe_memory_out.current_load_weights_state := 0.U(datawidth.W)
+    	    	
     	    	current_pe := 0.U(datawidth.W)
     	    	
 	        io.load_pe_memory_out.interconnect_loading_layer := 0.U(datawidth.W)
@@ -142,6 +153,8 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    
     	    is(request_stage){
     	    	io.load_pe_memory_out.current_load_weights_state := 1.U(datawidth.W)
+    	    	
+    	    	next_pe := current_pe + 1.U(datawidth.W)
     	    	
     	    	current_copy_address := 0.U(datawidth.W)
     	    	current_save_address := 0.U(datawidth.W)
@@ -165,7 +178,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	} .otherwise{
     	    	    when(io.load_pe_memory_in.load_initial_weights){    	    	
 	            	io.load_pe_memory_out.interconnect_loading_layer := 2.U(datawidth.W)
-    	            	io.load_pe_memory_out.interconnect_loading_activation := current_pe + 1.U(datawidth.W)
+    	            	io.load_pe_memory_out.interconnect_loading_activation := next_pe
     	            	io.load_pe_memory_out.interconnect_load_request := 1.U(1.W)
     	    	    } .otherwise{
 	            	io.load_pe_memory_out.interconnect_loading_layer := loading_layer
@@ -175,7 +188,8 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	    
     	    	    when(io.load_pe_memory_in.interconnect_load_ready){
     	    	    	current_state := weight_load_state
-    	    	    	current_pe := current_pe + 1.U(datawidth)
+    	    	    	
+    	    	    	current_pe := current_pe + 1.U(datawidth.W)
 
 		    	io.load_pe_memory_out.interconnect_loading_layer := 0.U(datawidth.W)
     	            	io.load_pe_memory_out.interconnect_loading_activation := 0.U(datawidth.W)
@@ -203,12 +217,12 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	when(current_copy_address === loading_length)
     	    	{   when(current_pe === numberOfPE.U(datawidth.W))
     	    	    {
-    	    	    	current_state := reset_state2
     	    	    	when(io.load_pe_memory_in.load_initial_weights){
     	    	    	    load_initial_weights_complete := true.B
     	    	    	} .otherwise{
     	    	    	    load_buffer_weight_memory_complete := true.B
     	    	    	}
+    	    	    	current_state := reset_state2
     	    	    	
     	    	    } .otherwise{
     	    	    	current_state := request_stage
@@ -228,16 +242,14 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	load_initial_weights_complete := false.B
     	    	load_buffer_weight_memory_complete := false.B
     	    
-    	    	when((io.load_pe_memory_in.load_initial_weights || io.load_pe_memory_in.weight_buffer_load_request) === false.B){
+    	    	when((io.load_pe_memory_in.load_initial_weights === false.B)  && (io.load_pe_memory_in.weight_buffer_load_request === false.B)){
     	    	    current_state := idle2
     	    	}
     	    }
     	
     	}
     
-    }
-    
-    when(io.load_pe_memory_in.load_datapoint){
+   when(io.load_pe_memory_in.load_datapoint){
     	
     	when(io.load_pe_memory_in.load_new_request){
 	    io.load_pe_memory_out.load_new_data_request := true.B
@@ -319,7 +331,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
 io.load_pe_memory_out.load_datapoint_complete := load_datapoint_complete
 io.load_pe_memory_out.load_initial_weights_complete := load_initial_weights_complete
 io.load_pe_memory_out.load_buffer_weight_memory_complete := load_buffer_weight_memory_complete
-
+io.load_pe_memory_out.current_pe := current_pe
 
 }
 
