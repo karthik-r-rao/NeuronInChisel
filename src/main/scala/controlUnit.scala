@@ -91,7 +91,7 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     val buffer_memory = SyncReadMem(memoryDepth, Bits(datawidth.W))
 
 //INITIALIZATION
-    io.controller_out.load_initial_weights := 0.U(1.W)
+    val load_initial_weights_out = RegInit(0.U(1.W))
 
     val load_datapoint = RegInit(0.U(1.W))
     val load_new_request = RegInit(0.U(1.W))
@@ -136,7 +136,6 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
 
     val current_layer_total_activations = RegInit(0.U(datawidth.W))
     //current_layer_total_activations := nn_description_table(2)
-    val load_initial_weights = RegInit(0.U(1.W))
     
     val current_layer_current_activation = RegInit(1.U(datawidth.W))
     val current_layer_next_activation = RegInit(1.U(datawidth.W))
@@ -162,6 +161,7 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     val current_write_memory_usage = RegInit("b00".U(2.W))
     val previous_read_memory_usage = RegInit("b10".U(2.W))
     
+    val load_initial_weights = RegInit(0.U(1.W))
     val load_weight_buffer_signal = RegInit("b0".U(1.W))
                 
     switch(curr_state){
@@ -311,7 +311,15 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     	
     	
     	is(loading_initial_weights){
-    	    io.controller_out.load_initial_weights := true.B
+    	    load_initial_weights_out := true.B
+    	    
+    	    for(j <- 0 until numberOfPE){
+    	    	when(j.U(datawidth.W) >= current_layer_max_computations){
+    	    	    write_memoryUnits(j) := 0.U(2.W)
+    	    	} .otherwise{
+    	    	    write_memoryUnits(j) := 1.U(2.W)
+    	    	}
+    	    }
     	    
     	    load_initial_weights := false.B
     	    when(io.controller_in.controller_reset){
@@ -323,7 +331,7 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     	
 
     	is(load_data){
-    	    io.controller_out.load_initial_weights := false.B
+    	    load_initial_weights_out := false.B
 
 
     	    io.controller_out.current_state := 6.U(4.W)
@@ -481,7 +489,7 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     io.controller_out.iteration_layer := iteration_layer
     io.controller_out.max_layer := max_layer
     io.controller_out.current_layer_current_activation := current_layer_current_activation
-    
+    io.controller_out.load_initial_weights := load_initial_weights_out    
 
 
 }
