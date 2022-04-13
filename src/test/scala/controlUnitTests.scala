@@ -122,7 +122,17 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    
 	    dut.clock.step()
 	    
-	    dut.io.controller_out.load_initial_weights.expect(true.B)
+	    dut.io.controller_out.load_initial_weights.expect(false.B)
+
+	    dut.clock.step()
+	    
+	    dut.io.controller_out.write_memoryUnits(0).expect(1.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(1).expect(1.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(2).expect(1.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(3).expect(1.U(2.W))
+	    
+	    
+	    dut.io.controller_in.loading_initial_weights_complete.poke(true.B)
 	    dut.io.controller_in.loading_initial_weights_complete.poke(true.B)
 	    
 	    dut.clock.step()
