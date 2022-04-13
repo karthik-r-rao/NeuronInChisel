@@ -140,6 +140,7 @@ class LoadPEMemorySpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.load_pe_memory_in.write_memoryUnits(1).poke(1.U(2.W))
 	    dut.io.load_pe_memory_in.write_memoryUnits(2).poke(1.U(2.W))
 	    dut.io.load_pe_memory_in.write_memoryUnits(3).poke(1.U(2.W))
+	    dut.io.load_pe_memory_out.current_pe.expect(0.U(16.W))
 
 	    
 	    
@@ -260,11 +261,15 @@ class LoadPEMemorySpec extends AnyFlatSpec with ChiselScalatestTester{
 
 	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
 	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_load_ready.poke(false.B)
+
 	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(0.U(16.W))
 	    
 	    
 //Outputs	    
     	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+    	    
+    	    dut.io.load_pe_memory_out.current_pe.expect(1.U(16.W))
 
 
 	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
@@ -474,10 +479,90 @@ class LoadPEMemorySpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
 	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(5.U(16.W))
 	    
-	    
+    
 //Outputs	    
     	    dut.io.load_pe_memory_out.current_load_weights_state.expect(1.U(16.W))
 
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(2.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(2.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(true.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.current_pe.expect(1.U(16.W))
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_load_ready.poke(true.B)
+
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(1.U(16.W))
 
 	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
 	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
@@ -502,6 +587,930 @@ class LoadPEMemorySpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
 
 
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_load_ready.poke(false.B)
+
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(0.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+    	    
+    	    dut.io.load_pe_memory_out.current_pe.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+	    
+
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(5.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(5.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(1.U(16.W))
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(6.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(6.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(1.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(2.U(16.W))
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(7.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(7.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(2.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(3.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(8.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(8.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(3.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(4.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(0.U(16.W))
+	    
+    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(1.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(2.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(3.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(true.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.current_pe.expect(2.U(16.W))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_load_ready.poke(true.B)
+
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(1.U(16.W))
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_load_ready.poke(false.B)
+
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(0.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+    	    
+    	    dut.io.load_pe_memory_out.current_pe.expect(3.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+	    
+
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(9.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(9.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(1.U(16.W))
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(10.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(10.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(1.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(2.U(16.W))
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(11.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(11.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(2.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(3.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(12.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(12.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(3.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(4.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(0.U(16.W))
+	    
+    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(1.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(2.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(4.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(true.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.current_pe.expect(3.U(16.W))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_load_ready.poke(true.B)
+
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(1.U(16.W))
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_load_ready.poke(false.B)
+
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(0.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+    	    
+    	    dut.io.load_pe_memory_out.current_pe.expect(4.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+	    
+
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(9.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(9.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(1.U(16.W))
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(10.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(10.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(1.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(2.U(16.W))
+
+
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(11.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(11.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(2.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(3.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(true.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(12.U(16.W))
+	    
+	    
+//Outputs	    
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(2.U(16.W))
+
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(true.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(12.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(3.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(4.U(16.W))
+
+
+
+
+	    dut.clock.step()
+	    
+	    
+	    
+//Inputs
+            dut.io.load_pe_memory_in.load_initial_weights.poke(false.B)
+
+	    dut.io.load_pe_memory_in.loading_length.poke(4.U(16.W))
+	    dut.io.load_pe_memory_in.loading_layer.poke(0.U(16.W))
+	    dut.io.load_pe_memory_in.interconnect_memory_output.poke(0.U(16.W))
+
+//Outputs
+	    
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(true.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    	    
+	    dut.io.load_pe_memory_out.current_load_weights_state.expect(3.U(16.W))
+
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(true.B)   
+	    dut.io.load_pe_memory_out.load_datapoint_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+    
+	    dut.io.load_pe_memory_out.datapoint_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.datapoint_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.datapoint_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.buffer_memory_write_address.expect(0.U(16.W))
+    
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_enable.expect(false.B)
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_data.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.weight_buffer_memory_write_address.expect(0.U(16.W))
+	    
+	    dut.io.load_pe_memory_out.interconnect_loading_layer.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_loading_activation.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.interconnect_load_request.expect(false.B)
+	    
+	    dut.io.load_pe_memory_out.interconnect_load_read_address.expect(0.U(16.W))
+	    dut.io.load_pe_memory_out.current_pe.expect(4.U(16.W))
+
+
+	    dut.clock.step()
+	    
+	    dut.io.load_pe_memory_out.load_initial_weights_complete.expect(false.B)
+	    dut.io.load_pe_memory_out.load_buffer_weight_memory_complete.expect(false.B)
+
+    	    dut.io.load_pe_memory_out.current_load_weights_state.expect(0.U(16.W))
+
+	    
 	}
     }
 }
