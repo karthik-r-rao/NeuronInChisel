@@ -105,14 +105,15 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
 
     val idle::copy_buffer::reset_state::Nil = Enum(3)
     val copy_buffer_state = RegInit(idle)
-    val current_copy_address = RegInit(0.U(datawidth.W))
-    val current_save_address = RegInit(0.U(datawidth.W))
+    val current_copy_address2 = RegInit(0.U(datawidth.W))
+    val current_save_address2 = RegInit(0.U(datawidth.W))
     val loading_length = RegInit(0.U(datawidth.W))
     val load_datapoint_complete = RegInit(0.U(1.W))
     
 
     val idle2::request_stage::weight_load_state::reset_state2::Nil = Enum(4)
-    
+    val current_copy_address = RegInit(0.U(datawidth.W))
+    val current_save_address = RegInit(0.U(datawidth.W))    
     val current_state = RegInit(idle2)
     
     val current_pe = RegInit(0.U(datawidth.W))
@@ -248,23 +249,20 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    }
     	
     	}
-    
-   when(io.load_pe_memory_in.load_datapoint){
-    	
-    	when(io.load_pe_memory_in.load_new_request){
+
+        	
+    	when(io.load_pe_memory_in.load_new_request && io.load_pe_memory_in.load_datapoint){
 	    io.load_pe_memory_out.load_new_data_request := true.B
-	    	 	
     	} 
     	
-    	when(io.load_pe_memory_in.load_data_from_buffer || io.load_pe_memory_in.new_datapoint_ready){
+    	
     	    switch(copy_buffer_state){
     	    	is(idle){
 	            io.load_pe_memory_out.current_load_datapoint_state := 0.U(datawidth.W)
 
     	    	
-    	    	    current_copy_address := 0.U(datawidth.W)
-    	    	    current_save_address := 0.U(datawidth.W)
-    	    	    load_datapoint_complete := false.B
+    	    	    current_copy_address2 := 0.U(datawidth.W)
+    	    	    current_save_address2 := 0.U(datawidth.W)
 
     	    	    io.load_pe_memory_out.buffer_memory_write_address := 0.U(datawidth.W)
     	    	    io.load_pe_memory_out.datapoint_memory_write_address := 0.U(datawidth.W)
@@ -272,30 +270,32 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	    
     	    	    io.load_pe_memory_out.datapoint_memory_write_data := 0.U(datawidth.W)
     	    	    
-    	    	    when(io.load_pe_memory_in.load_data_from_buffer){
+    	    	    when(io.load_pe_memory_in.load_data_from_buffer || io.load_pe_memory_in.new_datapoint_ready){
     	    	    	loading_length := io.load_pe_memory_in.loading_length
     	    	    	copy_buffer_state := copy_buffer
+    	    	    	
     	    	    }
     	    	}
     	    	
     	    	is(copy_buffer){
+    	    	    io.load_pe_memory_out.load_new_data_request := false.B
 		    io.load_pe_memory_out.current_load_datapoint_state := 1.U(datawidth.W)
 
     	    	    when(io.load_pe_memory_in.load_data_from_buffer){
-    	    	    	io.load_pe_memory_out.buffer_memory_write_address := current_copy_address
+    	    	    	io.load_pe_memory_out.buffer_memory_write_address := current_copy_address2
     	    	        io.load_pe_memory_out.datapoint_memory_write_data := io.load_pe_memory_in.buffer_memory_output
     	    	    } .otherwise{
-    	    	    	io.load_pe_memory_out.interconnect_load_read_address := current_copy_address
+    	    	    	io.load_pe_memory_out.interconnect_load_read_address := current_copy_address2
     	    	    	io.load_pe_memory_out.datapoint_memory_write_data := io.load_pe_memory_in.interconnect_memory_output    	    	    	
     	    	    }
     	    	    
-    	    	    io.load_pe_memory_out.datapoint_memory_write_address := current_save_address
+    	    	    io.load_pe_memory_out.datapoint_memory_write_address := current_save_address2
     	    	    io.load_pe_memory_out.datapoint_memory_write_enable := true.B
     	    	        	    	    
-    	    	    current_copy_address := current_copy_address + 1.U(datawidth.W)
-    	    	    current_save_address := current_copy_address
+    	    	    current_copy_address2 := current_copy_address2 + 1.U(datawidth.W)
+    	    	    current_save_address2 := current_copy_address2
     	    	    
-    	    	    when(current_copy_address === loading_length){
+    	    	    when(current_copy_address2 === loading_length){
     	    	    	load_datapoint_complete := true.B
     	    	    	copy_buffer_state := reset_state
     	    	    }
@@ -306,7 +306,9 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
 
     	    	    load_datapoint_complete := false.B
 
+		    io.load_pe_memory_out.interconnect_load_read_address := 0.U(datawidth.W)
     	    	    io.load_pe_memory_out.buffer_memory_write_address := 0.U(datawidth.W)
+    	    	    
     	    	    io.load_pe_memory_out.datapoint_memory_write_address := 0.U(datawidth.W)
     	    	    io.load_pe_memory_out.datapoint_memory_write_enable := false.B
 
@@ -316,16 +318,17 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	}
     	    
     	    }
+    	 
     	
-    	} .elsewhen(io.load_pe_memory_in.load_same_data){
+    	when(io.load_pe_memory_in.load_same_data && io.load_pe_memory_in.load_datapoint){
     	    load_datapoint_complete := true.B
-    	    when(io.load_pe_memory_in.load_datapoint === false.B){
-    	    	load_datapoint_complete := false.B
-    	    }
-    	} 
+    	}    
+    	when(io.load_pe_memory_in.load_datapoint === false.B){
+    	    load_datapoint_complete := false.B
+    	}
+    	 
     
-    
-    }
+
 
 
 io.load_pe_memory_out.load_datapoint_complete := load_datapoint_complete
