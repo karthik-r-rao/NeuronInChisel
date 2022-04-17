@@ -1,14 +1,17 @@
 package nn
 
 import chisel3._
+import chisel3.util._
+import chisel3.util.log2Up
+import chisel3.util.experimental.loadMemoryFromFile   
+import firrtl.annotations.MemoryLoadFileType
+import scala.io.Source
+
 
 class Neuron(intWidth: Int, fracWidth: Int, sigmoidIntWidth: Int, sigmoidFracWidth: Int) extends Module{
     val io = IO(new Bundle{
         val neuron_in = new MultiplyAccumulateInterfaceIn(intWidth, fracWidth)
-        val write = Input(Bool())   // write enable
-        val w_addr = Input(UInt((sigmoidIntWidth + sigmoidFracWidth).W))    // write address
-        val w_dataIn = Input(UInt((sigmoidIntWidth + sigmoidFracWidth).W))  // write data
-        val neuron_out = Output(UInt((sigmoidIntWidth + sigmoidFracWidth).W))
+        val neuron_out = Output(SInt((intWidth + fracWidth).W))
     })
 
     val mac_inst = Module(new MultiplyAccumulate(intWidth, fracWidth))
@@ -17,11 +20,9 @@ class Neuron(intWidth: Int, fracWidth: Int, sigmoidIntWidth: Int, sigmoidFracWid
     // make connections
     mac_inst.io.mac_in := io.neuron_in
 
-    sigmoid_inst.io.addr := Mux(io.write, io.w_addr, mac_inst.io.mac_out(2*fracWidth + sigmoidIntWidth - 1, 2*fracWidth - sigmoidFracWidth)) 
-    sigmoid_inst.io.write := io.write
-    sigmoid_inst.io.dataIn := io.w_dataIn
+    sigmoid_inst.io.addr := mac_inst.io.mac_out(2*fracWidth + sigmoidIntWidth - 1, 2*fracWidth - sigmoidFracWidth)
 
-    io.neuron_out := sigmoid_inst.io.dataOut
+    io.neuron_out := Cat("b000".U, sigmoid_inst.io.dataOut, "b00000".U).asSInt
 }
 
 object DriverNeuron extends App{
