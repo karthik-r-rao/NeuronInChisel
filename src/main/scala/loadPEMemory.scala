@@ -28,10 +28,7 @@ class LoadPEMemoryInterfaceIn(memoryDepth: Int, memoryHeight: Int, datawidth: In
     
 //  Buffer Memory Output
     val buffer_memory_output = Input(Bits(datawidth.W))
-    
-//  Datapoint Memory Output
-    val datapoint_memory_output = Input(Bits(datawidth.W))
-    
+        
     val new_datapoint_ready = Input(Bool())
     
 //  Interconnect Input
@@ -54,7 +51,7 @@ class LoadPEMemoryInterfaceOut(memoryDepth: Int, memoryHeight: Int, datawidth: I
     val buffer_memory_write_data = Output(Bits(datawidth.W))
     val buffer_memory_write_address = Output(Bits(datawidth.W))
     
-    val weight_buffer_memory_write_enable = Output(Bool())
+    val write_memoryUnits = Output(Vec(numberOfPE, Bits(2.W)))
     val weight_buffer_memory_write_data = Output(Bits(datawidth.W))
     val weight_buffer_memory_write_address = Output(Bits(datawidth.W))
     
@@ -92,7 +89,10 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     io.load_pe_memory_out.buffer_memory_write_address := 0.U(datawidth.W)
     io.load_pe_memory_out.buffer_memory_write_data := 0.U(datawidth.W)
 
-    io.load_pe_memory_out.weight_buffer_memory_write_enable := false.B
+    for(j <- 0 until numberOfPE){
+        io.load_pe_memory_out.write_memoryUnits(j) := "b00".U(2.W)
+    }
+    
     io.load_pe_memory_out.weight_buffer_memory_write_address := 0.U(datawidth.W)
     io.load_pe_memory_out.weight_buffer_memory_write_data := 0.U(datawidth.W)
 
@@ -118,6 +118,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     
     val current_pe = RegInit(0.U(datawidth.W))
     val next_pe = WireDefault(0.U(datawidth.W))
+    val previous_pe = RegInit(0.U(datawidth.W))
 
     val load_initial_weights_complete = RegInit(0.U(1.W))
     val load_buffer_weight_memory_complete = RegInit(0.U(1.W))
@@ -162,9 +163,11 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
 
 
     	    	io.load_pe_memory_out.interconnect_load_read_address := 0.U(datawidth.W)
+    	    	
     	    	io.load_pe_memory_out.weight_buffer_memory_write_address := 0.U(datawidth.W)
-    	    	io.load_pe_memory_out.weight_buffer_memory_write_enable := false.B
-    	    	    
+		for(j <- 0 until numberOfPE){
+        		io.load_pe_memory_out.write_memoryUnits(j) := "b00".U(2.W)
+    		}    	    	        	    	    
     	    	io.load_pe_memory_out.weight_buffer_memory_write_data := 0.U(datawidth.W)
     	    	
     	    	    	    	
@@ -191,6 +194,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	    	current_state := weight_load_state
     	    	    	
     	    	    	current_pe := current_pe + 1.U(datawidth.W)
+    	    	    	previous_pe := current_pe
 
 		    	io.load_pe_memory_out.interconnect_loading_layer := 0.U(datawidth.W)
     	            	io.load_pe_memory_out.interconnect_loading_activation := 0.U(datawidth.W)
@@ -207,7 +211,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	
     	    	io.load_pe_memory_out.interconnect_load_read_address := current_copy_address
     	    	io.load_pe_memory_out.weight_buffer_memory_write_address := current_save_address
-    	    	io.load_pe_memory_out.weight_buffer_memory_write_enable := true.B
+		io.load_pe_memory_out.write_memoryUnits(previous_pe) := io.load_pe_memory_in.write_memoryUnits(previous_pe)   	    	
     	    	    
     	    	io.load_pe_memory_out.weight_buffer_memory_write_data := io.load_pe_memory_in.interconnect_memory_output
     	    	
