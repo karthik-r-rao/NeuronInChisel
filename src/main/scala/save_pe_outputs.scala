@@ -12,7 +12,7 @@ class SavePEOutputInterfaceIn(memoryDepth: Int, memoryHeight: Int, datawidth: In
     val save_data_request = Input(Bool())
     val current_buffer_memory_pointer = Input(Bits(datawidth.W))
     
-    val PE_outputs = Input(Vec(numberOfPE, SInt(datawidth.W)))
+    val PE_outputs = Input(Vec(numberOfPE, UInt(datawidth.W)))
 
 }
 
@@ -21,7 +21,7 @@ class SavePEOutputInterfaceOut(memoryDepth: Int, memoryHeight: Int, datawidth: I
 
     val buffer_memory_write_enable = Output(Bool())
     val buffer_memory_write_address = Output(Bits(datawidth.W))
-    val buffer_memory_write_data = Output(SInt(datawidth.W))
+    val buffer_memory_write_data = Output(UInt(datawidth.W))
 
 }
 
@@ -43,13 +43,13 @@ class SavePEOutput(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     
     io.save_pe_output_out.buffer_memory_write_enable := false.B
     io.save_pe_output_out.buffer_memory_write_address := 0.U(datawidth.W)
-    io.save_pe_output_out.buffer_memory_write_data := 0.S(datawidth.W)
+    io.save_pe_output_out.buffer_memory_write_data := 0.U(datawidth.W)
     
     switch(curr_state){
     	is(idle){
 	    io.save_pe_output_out.buffer_memory_write_enable := false.B
     	    io.save_pe_output_out.buffer_memory_write_address := 0.U(datawidth.W)
-	    io.save_pe_output_out.buffer_memory_write_data := 0.S(datawidth.W)
+	    io.save_pe_output_out.buffer_memory_write_data := 0.U(datawidth.W)
 
     	    save_data_complete := false.B
     	    current_save_stage := 0.U(datawidth.W)
@@ -77,7 +77,7 @@ class SavePEOutput(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	is(reset_state){
 	    io.save_pe_output_out.buffer_memory_write_enable := false.B
     	    io.save_pe_output_out.buffer_memory_write_address := 0.U(datawidth.W)
-	    io.save_pe_output_out.buffer_memory_write_data := 0.S(datawidth.W)
+	    io.save_pe_output_out.buffer_memory_write_data := 0.U(datawidth.W)
 
     	    save_data_complete := false.B
 

@@ -10,11 +10,11 @@ class SigmoidLut(intWidth: Int, fracWidth: Int) extends Module {
     val dataWidth = intWidth + fracWidth
     val io = IO(new Bundle {
         val addr = Input(UInt(addressWidth.W))  
-        val dataOut = Output(SInt(dataWidth.W)) // read data
+        val dataOut = Output(UInt(dataWidth.W)) // read data
     })
 
     val depth = scala.math.pow(2, addressWidth).toInt
-    val mem = SyncReadMem(depth, SInt(dataWidth.W))
+    val mem = SyncReadMem(depth, UInt(dataWidth.W))
     val path = getClass.getResource("/sigmoidlut.txt").getPath
     loadMemoryFromFile(mem, path, MemoryLoadFileType.Binary) 
     

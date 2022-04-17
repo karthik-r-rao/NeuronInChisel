@@ -11,7 +11,7 @@ import scala.io.Source
 class Neuron(intWidth: Int, fracWidth: Int, sigmoidIntWidth: Int, sigmoidFracWidth: Int) extends Module{
     val io = IO(new Bundle{
         val neuron_in = new MultiplyAccumulateInterfaceIn(intWidth, fracWidth)
-        val neuron_out = Output(SInt((intWidth + fracWidth).W))
+        val neuron_out = Output(UInt((intWidth + fracWidth).W))
     })
 
     val mac_inst = Module(new MultiplyAccumulate(intWidth, fracWidth))
@@ -22,7 +22,7 @@ class Neuron(intWidth: Int, fracWidth: Int, sigmoidIntWidth: Int, sigmoidFracWid
 
     sigmoid_inst.io.addr := mac_inst.io.mac_out(2*fracWidth + sigmoidIntWidth - 1, 2*fracWidth - sigmoidFracWidth)
 
-    io.neuron_out := Cat("b000".U, sigmoid_inst.io.dataOut, "b00000".U).asSInt
+    io.neuron_out := Cat("b000".U, sigmoid_inst.io.dataOut, "b00000".U)
 }
 
 object DriverNeuron extends App{

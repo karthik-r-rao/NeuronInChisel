@@ -16,7 +16,7 @@ class NeuronArchitectureInterfaceIn(memoryDepth: Int, memoryHeight: Int, datawid
     
     val interconnect_new_datapoint_ready = Input(Bool())
     val interconnect_load_ready = Input(Bool())
-    val interconnect_memory_output = Input(SInt(datawidth.W))
+    val interconnect_memory_output = Input(UInt(datawidth.W))
 
 }
 
@@ -96,10 +96,10 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
     control_unit.io.controlUnit_in.interconnect_load_ready := io.neuron_architecture_in.interconnect_load_ready
     control_unit.io.controlUnit_in.interconnect_memory_output := io.neuron_architecture_in.interconnect_memory_output
     
-    control_unit.io.controlUnit_in.PE_outputs(0) := neuron_1.io.neuron_out
-    control_unit.io.controlUnit_in.PE_outputs(1) := neuron_2.io.neuron_out
-    control_unit.io.controlUnit_in.PE_outputs(2) := neuron_3.io.neuron_out
-    control_unit.io.controlUnit_in.PE_outputs(3) := neuron_4.io.neuron_out
+    control_unit.io.controlUnit_in.PE_outputs(0) := neuron_1.io.neuron_out.asUInt
+    control_unit.io.controlUnit_in.PE_outputs(1) := neuron_2.io.neuron_out.asUInt
+    control_unit.io.controlUnit_in.PE_outputs(2) := neuron_3.io.neuron_out.asUInt
+    control_unit.io.controlUnit_in.PE_outputs(3) := neuron_4.io.neuron_out.asUInt
     
     
 //  datapoint memory inputs
@@ -109,7 +109,7 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
     	datapoint_memory.io.dataIn := control_unit.io.controlUnit_out.datapoint_memory_write_data
     	datapoint_memory.io.wrEna := control_unit.io.controlUnit_out.datapoint_memory_write_enable
     } .otherwise{
-    	datapoint_memory.io.dataIn := 0.S(datawidth.W) 
+    	datapoint_memory.io.dataIn := 0.U(datawidth.W) 
     	datapoint_memory.io.wrEna := false.B
     	datapoint_memory.io.Addr := control_unit.io.controlUnit_out.Address
     }
@@ -151,49 +151,49 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
 
 //  Neuron Inputs
     neuron_1.io.neuron_in.rst := control_unit.io.controlUnit_out.neuron_reset
-    neuron_1.io.neuron_in.op1 := datapoint_memory.io.rdData
+    neuron_1.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(0) === 1.U(2.W)){
-    	neuron_1.io.neuron_in.op2 := weight_memory_1.io.rdData
+    	neuron_1.io.neuron_in.op2 := weight_memory_1.io.rdData.asSInt
     } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(0) === 1.U(2.W)){
-    	neuron_1.io.neuron_in.op2 := weight_memory_2.io.rdData
+    	neuron_1.io.neuron_in.op2 := weight_memory_2.io.rdData.asSInt
     } .otherwise{
-    	neuron_1.io.neuron_in.op2 := 0.S(datawidth.W)
+    	neuron_1.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
     }
     neuron_1.io.neuron_in.bias := control_unit.io.controlUnit_out.bias_valid
     
 
     neuron_2.io.neuron_in.rst := control_unit.io.controlUnit_out.neuron_reset
-    neuron_2.io.neuron_in.op1 := datapoint_memory.io.rdData
+    neuron_2.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(1) === 1.U(2.W)){
-    	neuron_2.io.neuron_in.op2 := weight_memory_3.io.rdData
+    	neuron_2.io.neuron_in.op2 := weight_memory_3.io.rdData.asSInt
     } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(1) === 1.U(2.W)){
-    	neuron_2.io.neuron_in.op2 := weight_memory_4.io.rdData
+    	neuron_2.io.neuron_in.op2 := weight_memory_4.io.rdData.asSInt
     } .otherwise{
-    	neuron_2.io.neuron_in.op2 := 0.S(datawidth.W)
+    	neuron_2.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
     }
     neuron_2.io.neuron_in.bias := control_unit.io.controlUnit_out.bias_valid
 
 
     neuron_3.io.neuron_in.rst := control_unit.io.controlUnit_out.neuron_reset
-    neuron_3.io.neuron_in.op1 := datapoint_memory.io.rdData
+    neuron_3.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(2) === 1.U(2.W)){
-    	neuron_3.io.neuron_in.op2 := weight_memory_5.io.rdData
+    	neuron_3.io.neuron_in.op2 := weight_memory_5.io.rdData.asSInt
     } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(2) === 1.U(2.W)){
-    	neuron_3.io.neuron_in.op2 := weight_memory_6.io.rdData
+    	neuron_3.io.neuron_in.op2 := weight_memory_6.io.rdData.asSInt
     } .otherwise{
-    	neuron_3.io.neuron_in.op2 := 0.S(datawidth.W)
+    	neuron_3.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
     }
     neuron_3.io.neuron_in.bias := control_unit.io.controlUnit_out.bias_valid
 
 
     neuron_4.io.neuron_in.rst := control_unit.io.controlUnit_out.neuron_reset
-    neuron_4.io.neuron_in.op1 := datapoint_memory.io.rdData
+    neuron_4.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(3) === 1.U(2.W)){
-    	neuron_4.io.neuron_in.op2 := weight_memory_7.io.rdData
+    	neuron_4.io.neuron_in.op2 := weight_memory_7.io.rdData.asSInt
     } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(3) === 1.U(2.W)){
-    	neuron_4.io.neuron_in.op2 := weight_memory_8.io.rdData
+    	neuron_4.io.neuron_in.op2 := weight_memory_8.io.rdData.asSInt
     } .otherwise{
-    	neuron_4.io.neuron_in.op2 := 0.S(datawidth.W)
+    	neuron_4.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
     }
     neuron_4.io.neuron_in.bias := control_unit.io.controlUnit_out.bias_valid
     
@@ -206,7 +206,7 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
 
 }
 
-/*
+
 object DriverNeuronArchitecture extends App{
     (new chisel3.stage.ChiselStage).emitVerilog(new NeuronArchitecture(8, 32, 18, 4, 32), Array("--target-dir", "generated/"))
-}*/
+}

@@ -12,14 +12,14 @@ class datapointMemoryAccess(memoryDepth: Int, memoryHeight: Int, datawidth: Int,
   val io = IO(new Bundle {
     val wrEna = Input(Bool())
     val Addr = Input(UInt(10.W))
-    val dataIn = Input(SInt(datawidth.W))
-    val rdData = Output(SInt(datawidth.W))
+    val dataIn = Input(UInt(datawidth.W))
+    val rdData = Output(UInt(datawidth.W))
   
   })
 
-  val mem = SyncReadMem(tableDepth, SInt(datawidth.W))
+  val mem = SyncReadMem(tableDepth, UInt(datawidth.W))
 
-  io.rdData := 0.S(datawidth.W)
+  io.rdData := 0.U(datawidth.W)
   
   val rdwrPort = mem(io.Addr)
   

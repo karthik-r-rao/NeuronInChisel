@@ -14,9 +14,9 @@ class ControlUnitIntegratedInterfaceIn(memoryDepth: Int, memoryHeight: Int, data
     
     val interconnect_new_datapoint_ready = Input(Bool())
     val interconnect_load_ready = Input(Bool())
-    val interconnect_memory_output = Input(SInt(datawidth.W))
+    val interconnect_memory_output = Input(UInt(datawidth.W))
 
-    val PE_outputs = Input(Vec(numberOfPE, SInt(datawidth.W)))
+    val PE_outputs = Input(Vec(numberOfPE, UInt(datawidth.W)))
 
 }
 
@@ -26,7 +26,7 @@ class ControlUnitIntegratedInterfaceOut(memoryDepth: Int, memoryHeight: Int, dat
 
 // Load PE memory outputs
     val write_memoryUnits = Output(Vec(numberOfPE, Bits(2.W)))
-    val weight_buffer_memory_write_data = Output(SInt(datawidth.W))
+    val weight_buffer_memory_write_data = Output(UInt(datawidth.W))
     val weight_buffer_memory_write_address = Output(Bits(datawidth.W))
 
     val interconnect_loading_layer = Output(Bits(datawidth.W))
@@ -39,7 +39,7 @@ class ControlUnitIntegratedInterfaceOut(memoryDepth: Int, memoryHeight: Int, dat
 
 // Address Generator Outputs
     val datapoint_memory_write_enable = Output(Bool())
-    val datapoint_memory_write_data = Output(SInt(datawidth.W))
+    val datapoint_memory_write_data = Output(UInt(datawidth.W))
     val datapoint_memory_write_address = Output(Bits(datawidth.W))
 
     val Address = Output(Bits(log2Up(memoryHeight).W)) 
@@ -89,7 +89,7 @@ class ControlUnitIntegrated(memoryDepth: Int, memoryHeight: Int, datawidth: Int,
     load_pe_memory.io.load_pe_memory_in.loading_layer := controller.io.controller_out.loading_layer
     load_pe_memory.io.load_pe_memory_in.loading_length := controller.io.controller_out.max_iteration
     load_pe_memory.io.load_pe_memory_in.loading_activations := controller.io.controller_out.loading_activations
-    load_pe_memory.io.load_pe_memory_in.write_memoryUnits := load_pe_memory.io.load_pe_memory_out.write_memoryUnits
+    load_pe_memory.io.load_pe_memory_in.write_memoryUnits := controller.io.controller_out.write_memoryUnits
 
     load_pe_memory.io.load_pe_memory_in.buffer_memory_output := buffer_datapoint_memory_access.io.rdData
 
