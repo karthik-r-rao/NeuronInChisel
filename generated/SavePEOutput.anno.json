@@ -1,0 +1,20 @@
+[
+  {
+    "class":"firrtl.EmitCircuitAnnotation",
+    "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxTargetDirAnno",
+    "targetDir":"generated/"
+  },
+  {
+    "class":"firrtl.transforms.CombinationalPath",
+    "sink":"~SavePEOutput|SavePEOutput>io_save_pe_output_out_buffer_memory_write_data",
+    "sources":[
+      "~SavePEOutput|SavePEOutput>io_save_pe_output_in_PE_outputs_3",
+      "~SavePEOutput|SavePEOutput>io_save_pe_output_in_PE_outputs_2",
+      "~SavePEOutput|SavePEOutput>io_save_pe_output_in_PE_outputs_1",
+      "~SavePEOutput|SavePEOutput>io_save_pe_output_in_PE_outputs_0"
+    ]
+  }
+]

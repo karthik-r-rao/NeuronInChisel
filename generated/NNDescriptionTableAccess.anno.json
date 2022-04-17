@@ -1,0 +1,30 @@
+[
+  {
+    "class":"firrtl.EmitCircuitAnnotation",
+    "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.annotations.LoadMemoryAnnotation",
+    "target":"NNDescriptionTableAccess.NNDescriptionTableAccess.mem",
+    "fileName":"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_70215035/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/nn_description_table.txt",
+    "hexOrBinary":"b",
+    "originalMemoryNameOpt":"mem"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxTargetDirAnno",
+    "targetDir":"generated/"
+  },
+  {
+    "class":"firrtl.transforms.CombinationalPath",
+    "sink":"~NNDescriptionTableAccess|NNDescriptionTableAccess>io_rdData",
+    "sources":[
+      "~NNDescriptionTableAccess|NNDescriptionTableAccess>io_wrEna"
+    ]
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxInlineAnno",
+    "target":"NNDescriptionTableAccess.NNDescriptionTableAccess",
+    "name":"NNDescriptionTableAccess.NNDescriptionTableAccess.mem.v",
+    "text":"module BindsTo_0_NNDescriptionTableAccess(\n  input         clock,\n  input         reset,\n  input         io_wrEna,\n  input  [9:0]  io_Addr,\n  input  [15:0] io_dataIn,\n  output [15:0] io_rdData\n);\n\n  \ninitial begin\n  $readmemb(\"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_70215035/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/nn_description_table.txt\", NNDescriptionTableAccess.mem);\nend\n                      endmodule\n\nbind NNDescriptionTableAccess BindsTo_0_NNDescriptionTableAccess BindsTo_0_NNDescriptionTableAccess_Inst(.*);"
+  }
+]
