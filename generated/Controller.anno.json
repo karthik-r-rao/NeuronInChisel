@@ -1,0 +1,17 @@
+[
+  {
+    "class":"firrtl.EmitCircuitAnnotation",
+    "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxTargetDirAnno",
+    "targetDir":"generated/"
+  },
+  {
+    "class":"firrtl.transforms.CombinationalPath",
+    "sink":"~Controller|Controller>io_controller_out_nn_description_table_address",
+    "sources":[
+      "~Controller|Controller>io_controller_in_controller_reset"
+    ]
+  }
+]

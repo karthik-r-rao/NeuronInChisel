@@ -1,0 +1,17 @@
+[
+  {
+    "class":"firrtl.EmitCircuitAnnotation",
+    "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxTargetDirAnno",
+    "targetDir":"generated/"
+  },
+  {
+    "class":"firrtl.transforms.CombinationalPath",
+    "sink":"~datapointMemoryAccess|datapointMemoryAccess>io_rdData",
+    "sources":[
+      "~datapointMemoryAccess|datapointMemoryAccess>io_wrEna"
+    ]
+  }
+]
