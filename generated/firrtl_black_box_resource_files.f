@@ -1,1 +1,2 @@
-/home/vsathvik/Academics/major_project/neural-net-chisel-main/generated/SigmoidLut.SigmoidLut.mem.v
+/home/karthikrrao/neural-net-chisel/generated/NeuronArchitecture.SigmoidLut.mem.v
+/home/karthikrrao/neural-net-chisel/generated/NeuronArchitecture.datapointMemoryAccess.mem.v

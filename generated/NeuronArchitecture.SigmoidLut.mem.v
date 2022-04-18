@@ -6,7 +6,7 @@ module BindsTo_0_SigmoidLut(
 
   
 initial begin
-  $readmemb("file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_87ddf643/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/sigmoidlut.txt", SigmoidLut.mem);
+  $readmemb("file:/home/karthikrrao/neural-net-chisel/target/bg-jobs/sbt_3bd6783e/job-1/target/68e72027/369e09f9/nninchisel_2.13-0.1.0.jar!/sigmoidlut.txt", SigmoidLut.mem);
 end
                       endmodule
 

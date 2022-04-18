@@ -21,24 +21,23 @@ class SigmoidLutSpec extends AnyFlatSpec with ChiselScalatestTester{
             // stats variables
             var num_passed = 0
 
-            // initialize memory
             val lut_values = Source.fromResource("sigmoidlut.txt").getLines().toList
             println(s"[test] Length of file: ${lut_values.length}")
 
-            for( w <- 0 until lut_values.length){
-                var input = lut_values(w)
-                var dut_in = ("b" + input).U
+            // for( w <- 0 until lut_values.length){
+            //     var input = lut_values(w)
+            //     var dut_in = ("b" + input).U
 
-                dut.io.write.poke(true.B)
-                dut.io.addr.poke(w.U)
-                dut.io.dataIn.poke(dut_in)
-                dut.clock.step()
-            }
-            println("[test] Memory initialized")
+            //     dut.io.write.poke(true.B)
+            //     dut.io.addr.poke(w.U)
+            //     dut.io.dataIn.poke(dut_in)
+            //     dut.clock.step()
+            // }
+            // println("[test] Memory initialized")
 
             // read back from LUT
             for (w <- 0 until lut_values.length){
-                dut.io.write.poke(false.B)
+                // dut.io.write.poke(false.B)
                 dut.io.addr.poke(w.U)
                 dut.clock.step()
                 var output = dut.io.dataOut.peek().litValue.toInt

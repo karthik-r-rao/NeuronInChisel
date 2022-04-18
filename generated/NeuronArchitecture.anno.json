@@ -144,14 +144,14 @@
   {
     "class":"firrtl.annotations.LoadMemoryAnnotation",
     "target":"NeuronArchitecture.datapointMemoryAccess.mem",
-    "fileName":"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_87ddf643/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/nn_description_table.txt",
+    "fileName":"file:/home/karthikrrao/neural-net-chisel/target/bg-jobs/sbt_3bd6783e/job-1/target/68e72027/369e09f9/nninchisel_2.13-0.1.0.jar!/nn_description_table.txt",
     "hexOrBinary":"b",
     "originalMemoryNameOpt":"mem"
   },
   {
     "class":"firrtl.annotations.LoadMemoryAnnotation",
     "target":"NeuronArchitecture.SigmoidLut.mem",
-    "fileName":"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_87ddf643/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/sigmoidlut.txt",
+    "fileName":"file:/home/karthikrrao/neural-net-chisel/target/bg-jobs/sbt_3bd6783e/job-1/target/68e72027/369e09f9/nninchisel_2.13-0.1.0.jar!/sigmoidlut.txt",
     "hexOrBinary":"b",
     "originalMemoryNameOpt":"mem"
   },
@@ -184,12 +184,12 @@
     "class":"firrtl.transforms.BlackBoxInlineAnno",
     "target":"NeuronArchitecture.SigmoidLut",
     "name":"NeuronArchitecture.SigmoidLut.mem.v",
-    "text":"module BindsTo_0_SigmoidLut(\n  input        clock,\n  input  [9:0] io_addr,\n  output [9:0] io_dataOut\n);\n\n  \ninitial begin\n  $readmemb(\"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_87ddf643/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/sigmoidlut.txt\", SigmoidLut.mem);\nend\n                      endmodule\n\nbind SigmoidLut BindsTo_0_SigmoidLut BindsTo_0_SigmoidLut_Inst(.*);"
+    "text":"module BindsTo_0_SigmoidLut(\n  input        clock,\n  input  [9:0] io_addr,\n  output [9:0] io_dataOut\n);\n\n  \ninitial begin\n  $readmemb(\"file:/home/karthikrrao/neural-net-chisel/target/bg-jobs/sbt_3bd6783e/job-1/target/68e72027/369e09f9/nninchisel_2.13-0.1.0.jar!/sigmoidlut.txt\", SigmoidLut.mem);\nend\n                      endmodule\n\nbind SigmoidLut BindsTo_0_SigmoidLut BindsTo_0_SigmoidLut_Inst(.*);"
   },
   {
     "class":"firrtl.transforms.BlackBoxInlineAnno",
     "target":"NeuronArchitecture.datapointMemoryAccess",
     "name":"NeuronArchitecture.datapointMemoryAccess.mem.v",
-    "text":"module BindsTo_1_datapointMemoryAccess(\n  input         clock,\n  input         io_wrEna,\n  input  [9:0]  io_Addr,\n  input  [17:0] io_dataIn,\n  output [17:0] io_rdData\n);\n\n  \ninitial begin\n  $readmemb(\"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_87ddf643/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/nn_description_table.txt\", datapointMemoryAccess.mem);\nend\n                      endmodule\n\nbind datapointMemoryAccess BindsTo_1_datapointMemoryAccess BindsTo_1_datapointMemoryAccess_Inst(.*);"
+    "text":"module BindsTo_1_datapointMemoryAccess(\n  input         clock,\n  input         io_wrEna,\n  input  [9:0]  io_Addr,\n  input  [17:0] io_dataIn,\n  output [17:0] io_rdData\n);\n\n  \ninitial begin\n  $readmemb(\"file:/home/karthikrrao/neural-net-chisel/target/bg-jobs/sbt_3bd6783e/job-1/target/68e72027/369e09f9/nninchisel_2.13-0.1.0.jar!/nn_description_table.txt\", datapointMemoryAccess.mem);\nend\n                      endmodule\n\nbind datapointMemoryAccess BindsTo_1_datapointMemoryAccess BindsTo_1_datapointMemoryAccess_Inst(.*);"
   }
 ]
