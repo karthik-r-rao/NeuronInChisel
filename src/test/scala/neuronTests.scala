@@ -19,7 +19,7 @@ class NeuronSpec extends AnyFlatSpec with ChiselScalatestTester{
     val sigmoidIntWidth = 3
     val sigmoidFracWidth = 7
     val num_test_vec = 100
-    val tolerance = 0.05
+    val tolerance = 0.01
     val file = "values.txt"
 
     def findSigmoid(x: Double): Double = {
@@ -73,6 +73,7 @@ class NeuronSpec extends AnyFlatSpec with ChiselScalatestTester{
                 var dut_bias_in = bias_in.S
 
                 var acc = 0.0
+                acc = acc + ((weight_in * data_in) / (scala.math.pow(2, 2*fracWidth)))
 
                 writer.write("======\n\n")
                 writer.write("W:")
