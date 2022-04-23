@@ -154,7 +154,7 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
     neuron_1.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(0) === 1.U(2.W)){
     	neuron_1.io.neuron_in.op2 := weight_memory_1.io.rdData.asSInt
-    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(0) === 1.U(2.W)){
+    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(0) === 2.U(2.W)){
     	neuron_1.io.neuron_in.op2 := weight_memory_2.io.rdData.asSInt
     } .otherwise{
     	neuron_1.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
@@ -166,7 +166,7 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
     neuron_2.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(1) === 1.U(2.W)){
     	neuron_2.io.neuron_in.op2 := weight_memory_3.io.rdData.asSInt
-    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(1) === 1.U(2.W)){
+    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(1) === 2.U(2.W)){
     	neuron_2.io.neuron_in.op2 := weight_memory_4.io.rdData.asSInt
     } .otherwise{
     	neuron_2.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
@@ -178,7 +178,7 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
     neuron_3.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(2) === 1.U(2.W)){
     	neuron_3.io.neuron_in.op2 := weight_memory_5.io.rdData.asSInt
-    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(2) === 1.U(2.W)){
+    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(2) === 2.U(2.W)){
     	neuron_3.io.neuron_in.op2 := weight_memory_6.io.rdData.asSInt
     } .otherwise{
     	neuron_3.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
@@ -190,7 +190,7 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
     neuron_4.io.neuron_in.op1 := datapoint_memory.io.rdData.asSInt
     when(control_unit.io.controlUnit_out.read_memoryUnits(3) === 1.U(2.W)){
     	neuron_4.io.neuron_in.op2 := weight_memory_7.io.rdData.asSInt
-    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(3) === 1.U(2.W)){
+    } .elsewhen(control_unit.io.controlUnit_out.read_memoryUnits(3) === 2.U(2.W)){
     	neuron_4.io.neuron_in.op2 := weight_memory_8.io.rdData.asSInt
     } .otherwise{
     	neuron_4.io.neuron_in.op2 := 0.U(datawidth.W).asSInt
