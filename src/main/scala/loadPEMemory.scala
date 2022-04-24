@@ -162,8 +162,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	current_save_address := 0.U(datawidth.W)
 
 
-    	    	io.load_pe_memory_out.interconnect_load_read_address := 0.U(datawidth.W)
-    	    	
+    	    	io.load_pe_memory_out.interconnect_load_read_address := 0.U(datawidth.W)    	    	
     	    	io.load_pe_memory_out.weight_buffer_memory_write_address := 0.U(datawidth.W)
 		for(j <- 0 until numberOfPE){
         		io.load_pe_memory_out.write_memoryUnits(j) := "b00".U(2.W)
@@ -274,7 +273,7 @@ class LoadPEMemory(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    	    
     	    	    io.load_pe_memory_out.datapoint_memory_write_data := 0.U(datawidth.W)
     	    	    
-    	    	    when(io.load_pe_memory_in.load_data_from_buffer || io.load_pe_memory_in.new_datapoint_ready){
+    	    	    when(io.load_pe_memory_in.load_datapoint && (io.load_pe_memory_in.load_data_from_buffer || io.load_pe_memory_in.new_datapoint_ready)){
     	    	    	loading_length := io.load_pe_memory_in.loading_length
     	    	    	copy_buffer_state := copy_buffer
     	    	    	

@@ -37,6 +37,10 @@ class ControlUnitIntegratedInterfaceOut(memoryDepth: Int, memoryHeight: Int, dat
     
     val load_new_data_request = Output(Bool())
 
+
+    val loading_layer = Output(Bits(datawidth.W))
+    val write_memoryUnits_testing = Output(Vec(numberOfPE, Bits(2.W)))
+
 // Address Generator Outputs
     val datapoint_memory_write_enable = Output(Bool())
     val datapoint_memory_write_data = Output(UInt(datawidth.W))
@@ -156,6 +160,9 @@ class ControlUnitIntegrated(memoryDepth: Int, memoryHeight: Int, datawidth: Int,
     io.controlUnit_out.load_pe_memory_load_datapoint_state := load_pe_memory.io.load_pe_memory_out.current_load_datapoint_state
     io.controlUnit_out.load_pe_memory_load_weights_state := load_pe_memory.io.load_pe_memory_out.current_load_weights_state
 
+    io.controlUnit_out.loading_layer := controller.io.controller_out.loading_layer
+    io.controlUnit_out.write_memoryUnits_testing := controller.io.controller_out.write_memoryUnits
+    
 }
 
 object DriverControlUnitIntegrated extends App{

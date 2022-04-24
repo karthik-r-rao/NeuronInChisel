@@ -106,7 +106,7 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     io.controller_out.nn_description_table_address := (0.U(datawidth.W))
 
 // STATE MACHINE STATE
-    val idle::initiate_nn::set_layer::save_layer::save_layer2::set_loading_layer::save_loading_layer::load_data::loading_initial_weights::start_compute::save_data::Nil = Enum(11)
+    val idle::initiate_nn::set_layer::save_layer::save_layer2::set_loading_layer::save_loading_layer::save_loading_layer2::load_data::loading_initial_weights::start_compute::save_data::Nil = Enum(12)
     
     val curr_state = RegInit(idle)
     io.controller_out.current_state := 0.U(4.W)
@@ -287,10 +287,23 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     	    io.controller_out.current_state := 5.U(4.W)
     	    
     	    current_layer_max_computations := io.controller_in.nn_description_table_input + 1.U(datawidth.W)
+    	    
     	    io.controller_out.nn_description_table_address := loading_layer
     	    
     	    //loading_layer_total_activations := nn_description_table(loading_layer)
     	    
+    	    when(io.controller_in.controller_reset){
+    	    	curr_state := idle
+    	    } .otherwise{
+    	    	curr_state := save_loading_layer2
+    	    }
+    	}
+    	
+    	is(save_loading_layer2){
+
+    	    loading_layer_total_activations := io.controller_in.nn_description_table_input
+
+    	
     	    when(io.controller_in.controller_reset){
     	    	curr_state := idle
     	    } .elsewhen(load_initial_weights.asBool){
@@ -298,12 +311,14 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     	    } .otherwise{
     	    	curr_state := load_data
     	    }
+    	
     	}
     	
     	
     	
     	is(loading_initial_weights){
     	    load_initial_weights_out := true.B
+    	    
     	    
     	    for(j <- 0 until numberOfPE){
     	    	when(j.U(datawidth.W) >= current_layer_total_activations){
@@ -324,10 +339,10 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
 
     	is(load_data){
     	    load_initial_weights_out := false.B
-
+    	    
 
     	    io.controller_out.current_state := 6.U(4.W)
-    	    loading_layer_total_activations := io.controller_in.nn_description_table_input
+//    	    loading_layer_total_activations := io.controller_in.nn_description_table_input
     	    load_datapoint := true.B
     	    
     	    when(io.controller_in.controller_reset){
@@ -390,9 +405,7 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
 	    	    loading_activations(j) := current_loading_activation + j.U(datawidth.W)
 	    	}
     	    }
-    	    
-    	    next_loading_activation := current_loading_activation + numberOfPE.U(datawidth.W)
-    	    
+    	        	    
     	        	    
     	    address_generator_address_valid := true.B
     	    address_generator_enable_valid := true.B
@@ -403,6 +416,11 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
 
     	    when(io.controller_in.load_buffer_weight_memory_complete){
     	    	load_weight_buffer_signal := "b1".U(1.W)
+    	    	weight_buffer_load_request := false.B
+		for(j <- 0 until numberOfPE){
+	    		write_memoryUnits(j) := "b00".U(2.W)
+    	    	}
+
     	    }
     	    
     	    when(io.controller_in.controller_reset){
@@ -417,25 +435,26 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
 
 	    previous_read_memory_usage := current_read_memory_usage
 	    current_layer_current_activation := current_layer_next_activation
-	    current_loading_activation := next_loading_activation
 	    
     	    io.controller_out.current_state := 8.U(4.W)
 
 	    for(j <- 0 until numberOfPE){
 	    	read_memoryUnits(j) := "b00".U(2.W)
-	    	write_memoryUnits(j) := "b00".U(2.W)
     	    }
     	
     	    address_generator_reset := true.B
     	    address_generator_address_valid := false.B
     	    address_generator_enable_valid := false.B
-    	    
-    	    weight_buffer_load_request := false.B
-    	
+    	       	
 	    save_data_request := true.B
 	        	    
     	    when(io.controller_in.load_buffer_weight_memory_complete){
     	    	load_weight_buffer_signal := "b1".U(1.W)
+    	    	weight_buffer_load_request := false.B
+		for(j <- 0 until numberOfPE){
+	    		write_memoryUnits(j) := "b00".U(2.W)
+    	    	}
+
     	    }
 
     	    when(io.controller_in.controller_reset){
@@ -443,6 +462,11 @@ class Controller(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOfPE
     	    } .elsewhen((load_weight_buffer_signal.asBool || io.controller_in.load_buffer_weight_memory_complete) && io.controller_in.save_data_complete){
     	    	current_buffer_memory_pointer := current_buffer_memory_pointer + numberOfPE.U(datawidth.W)
     	    	curr_state := set_layer
+    	    	weight_buffer_load_request := false.B
+		for(j <- 0 until numberOfPE){
+	    		write_memoryUnits(j) := "b00".U(2.W)
+    	    	}
+
     	    }
     	
     	}

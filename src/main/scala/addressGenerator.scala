@@ -47,7 +47,6 @@ class AddressGenerator(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numb
     
     enables := io.address_generator_in.memoryUnits
     
-    when(io.address_generator_in.address_valid){
     	when(io.address_generator_in.reset){
     	    neuron_reset := true.B
     	    bias_valid := false.B
@@ -77,7 +76,6 @@ class AddressGenerator(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numb
     	    
     	}
     	
-    }
     
     io.address_generator_out.Address := Address
     io.address_generator_out.address_generation_complete := address_generation_complete

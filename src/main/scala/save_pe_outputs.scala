@@ -79,10 +79,12 @@ class SavePEOutput(memoryDepth: Int, memoryHeight: Int, datawidth: Int, numberOf
     	    io.save_pe_output_out.buffer_memory_write_address := 0.U(datawidth.W)
 	    io.save_pe_output_out.buffer_memory_write_data := 0.U(datawidth.W)
 
-    	    save_data_complete := false.B
+    	    save_data_complete := true.B
 
     	    when(io.save_pe_output_in.save_data_request === false.B){
     	    	curr_state := idle
+    	    	save_data_complete := false.B
+
     	    }
     	}
     }

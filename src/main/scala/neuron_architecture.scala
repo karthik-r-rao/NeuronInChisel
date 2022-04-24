@@ -39,6 +39,8 @@ class NeuronArchitectureInterfaceOut(memoryDepth: Int, memoryHeight: Int, datawi
     val load_pe_memory_load_weights_state = Output(Bits(datawidth.W))
     val load_pe_memory_load_datapoint_state = Output(Bits(datawidth.W))
 
+    val loading_layer = Output(Bits(datawidth.W))
+    val write_memoryUnits = Output(Vec(numberOfPE, Bits(2.W)))
 
     val neuron_datainput = Output(Bits(datawidth.W))
     val neuron_weights = Output(Vec(numberOfPE, Bits(datawidth.W)))
@@ -263,7 +265,8 @@ class NeuronArchitecture(memoryDepth: Int, memoryHeight: Int, datawidth: Int, nu
     io.neuron_architecture_out.neuron_reset := control_unit.io.controlUnit_out.neuron_reset
     io.neuron_architecture_out.neuron_bias := control_unit.io.controlUnit_out.bias_valid
 
-
+    io.neuron_architecture_out.loading_layer := control_unit.io.controlUnit_out.loading_layer
+    io.neuron_architecture_out.write_memoryUnits := control_unit.io.controlUnit_out.write_memoryUnits_testing
 
 }
 
