@@ -26,11 +26,12 @@ class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
 
     // registers
     val acc = Reg(SInt((2*intWidth + 2*fracWidth).W))
+    val acc1 = Reg(SInt((2*intWidth + 2*fracWidth).W))
 
     multiply := 0.S
 
     when (io.mac_in.bias) {
-        op1 := io.mac_in.op1 << fracWidth  // shift to make 1 in fixed point 
+        op1 := 1.S((intWidth + fracWidth).W) << fracWidth  // shift to make 1 in fixed point 
     }
     .otherwise {
         op1 := io.mac_in.op1
@@ -44,9 +45,15 @@ class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
         acc := acc + multiply
     }
 
-    io.mac_out := acc
+    when (io.mac_in.bias){
+        acc1 := acc + multiply
+    }
+
+    io.mac_out := acc1
 }
 
 object DriverMultiplyAccumulate extends App{
     (new chisel3.stage.ChiselStage).emitVerilog(new MultiplyAccumulate(6, 12), Array("--target-dir", "generated/"))
 }
+
+
