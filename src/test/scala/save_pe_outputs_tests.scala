@@ -74,7 +74,7 @@ class SavePEOutputSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    
 	    dut.clock.step()
 
-	    dut.io.save_pe_output_out.save_data_complete.expect(false.B)
+	    dut.io.save_pe_output_out.save_data_complete.expect(true.B)
 	    dut.io.save_pe_output_in.current_buffer_memory_pointer.poke(0.U(16.W))
 	    dut.io.save_pe_output_in.PE_outputs(0).poke(0.U(16.W))
 	    dut.io.save_pe_output_in.PE_outputs(1).poke(0.U(16.W))
@@ -88,14 +88,14 @@ class SavePEOutputSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    
 	    dut.clock.step()
 
-	    dut.io.save_pe_output_in.save_data_request.poke(false.B)
+	    dut.io.save_pe_output_in.save_data_request.poke(true.B)
 	    dut.io.save_pe_output_out.buffer_memory_write_enable.expect(false.B)
     	    dut.io.save_pe_output_out.buffer_memory_write_address.expect(0.U(16.W))
 	    dut.io.save_pe_output_out.buffer_memory_write_data.expect(0.U(16.W))	    
 	    
 	    dut.clock.step()
 
-	    dut.io.save_pe_output_in.save_data_request.poke(false.B)
+	    dut.io.save_pe_output_in.save_data_request.poke(true.B)
 	    dut.io.save_pe_output_out.buffer_memory_write_enable.expect(false.B)
     	    dut.io.save_pe_output_out.buffer_memory_write_address.expect(0.U(16.W))
 	    dut.io.save_pe_output_out.buffer_memory_write_data.expect(0.U(16.W))	    

@@ -122,6 +122,10 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    
 	    dut.clock.step()
 	    
+	    dut.io.controller_in.nn_description_table_input.poke(10.U(16.W))	    
+	    
+	    dut.clock.step()
+	    
 	    dut.io.controller_out.load_initial_weights.expect(false.B)
 
 	    dut.clock.step()
@@ -139,7 +143,6 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    
 	    dut.io.controller_out.current_state.expect(6.U(4.W))
 	    
-	    dut.io.controller_in.nn_description_table_input.poke(10.U(16.W))
 	    
 	    dut.io.controller_out.load_datapoint.expect(false.B)
 	    dut.io.controller_out.current_buffer_memory_pointer.expect(0.U(16.W))
@@ -149,6 +152,7 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.current_layer_total_activations.expect(10.U(16.W))
 	    dut.io.controller_out.max_iteration.expect(16.U(16.W))
 	    dut.io.controller_out.loading_layer.expect(2.U(16.W))
+	    dut.io.controller_out.loading_layer_total_activations.expect(10.U(16.W))
 	    
 	    dut.clock.step()
 	    
@@ -257,15 +261,15 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.read_memoryUnits(2).expect(1.U(2.W))
 	    dut.io.controller_out.read_memoryUnits(3).expect(1.U(2.W))
 	    
-	    dut.io.controller_out.write_memoryUnits(0).expect(2.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(1).expect(2.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(2).expect(2.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(3).expect(2.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(0).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(1).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(2).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(3).expect(0.U(2.W))
 	    
 	    dut.io.controller_out.address_generator_address_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_enable_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_reset.expect(false.B)
-	    dut.io.controller_out.weight_buffer_load_request.expect(true.B)
+	    dut.io.controller_out.weight_buffer_load_request.expect(false.B)
 	    
 	    dut.io.controller_out.loading_activations(0).expect(5.U(16.W))
 	    dut.io.controller_out.loading_activations(1).expect(6.U(16.W))
@@ -359,10 +363,13 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.loading_layer.expect(2.U(16.W))
 	    
 	    dut.clock.step()
+
+	    dut.io.controller_in.nn_description_table_input.poke(10.U(16.W))	    
+	    
+	    dut.clock.step()
 	    
 	    dut.io.controller_out.current_state.expect(6.U(4.W))
 	    
-	    dut.io.controller_in.nn_description_table_input.poke(10.U(16.W))
 	    
 	    dut.io.controller_out.load_datapoint.expect(false.B)
 	    dut.io.controller_out.current_buffer_memory_pointer.expect(4.U(16.W))
@@ -372,6 +379,7 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.current_layer_total_activations.expect(10.U(16.W))
 	    dut.io.controller_out.max_iteration.expect(16.U(16.W))
 	    dut.io.controller_out.loading_layer.expect(2.U(16.W))
+	    dut.io.controller_out.loading_layer_total_activations.expect(10.U(16.W))
 	    
 	    dut.clock.step()
 	    
@@ -479,15 +487,15 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.read_memoryUnits(2).expect(2.U(2.W))
 	    dut.io.controller_out.read_memoryUnits(3).expect(2.U(2.W))
 	    
-	    dut.io.controller_out.write_memoryUnits(0).expect(1.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(1).expect(1.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(0).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(1).expect(0.U(2.W))
 	    dut.io.controller_out.write_memoryUnits(2).expect(0.U(2.W))
 	    dut.io.controller_out.write_memoryUnits(3).expect(0.U(2.W))
 	    
 	    dut.io.controller_out.address_generator_address_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_enable_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_reset.expect(false.B)
-	    dut.io.controller_out.weight_buffer_load_request.expect(true.B)
+	    dut.io.controller_out.weight_buffer_load_request.expect(false.B)
 	    
 	    dut.io.controller_out.loading_activations(0).expect(9.U(16.W))
 	    dut.io.controller_out.loading_activations(1).expect(10.U(16.W))
@@ -581,9 +589,13 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    
 	    dut.clock.step()
 	    
+	    dut.io.controller_in.nn_description_table_input.poke(8.U(16.W))	    
+	    
+	    dut.clock.step()
+	    
+	    
 	    dut.io.controller_out.current_state.expect(6.U(4.W))
 	    
-	    dut.io.controller_in.nn_description_table_input.poke(8.U(16.W))
 	    
 	    dut.io.controller_out.load_datapoint.expect(false.B)
 	    dut.io.controller_out.current_buffer_memory_pointer.expect(8.U(16.W))
@@ -593,6 +605,7 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.current_layer_total_activations.expect(10.U(16.W))
 	    dut.io.controller_out.max_iteration.expect(16.U(16.W))
 	    dut.io.controller_out.loading_layer.expect(3.U(16.W))
+	    dut.io.controller_out.loading_layer_total_activations.expect(8.U(16.W))
 	    
 	    dut.clock.step()
 	    
@@ -703,15 +716,15 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.read_memoryUnits(2).expect(0.U(2.W))
 	    dut.io.controller_out.read_memoryUnits(3).expect(0.U(2.W))
 	    
-	    dut.io.controller_out.write_memoryUnits(0).expect(2.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(1).expect(2.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(2).expect(2.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(3).expect(2.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(0).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(1).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(2).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(3).expect(0.U(2.W))
 	    
 	    dut.io.controller_out.address_generator_address_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_enable_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_reset.expect(false.B)
-	    dut.io.controller_out.weight_buffer_load_request.expect(true.B)
+	    dut.io.controller_out.weight_buffer_load_request.expect(false.B)
 	    
 	    dut.io.controller_out.loading_activations(0).expect(1.U(16.W))
 	    dut.io.controller_out.loading_activations(1).expect(2.U(16.W))
@@ -812,10 +825,13 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.loading_layer.expect(3.U(16.W))
 	    
 	    dut.clock.step()
+
+	    dut.io.controller_in.nn_description_table_input.poke(8.U(16.W))
+	    
+	    dut.clock.step()
 	    
 	    dut.io.controller_out.current_state.expect(6.U(4.W))
 	    
-	    dut.io.controller_in.nn_description_table_input.poke(8.U(16.W))
 	    
 	    dut.io.controller_out.load_datapoint.expect(false.B)
 	    dut.io.controller_out.current_buffer_memory_pointer.expect(0.U(16.W))
@@ -825,6 +841,7 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.current_layer_total_activations.expect(8.U(16.W))
 	    dut.io.controller_out.max_iteration.expect(11.U(16.W))
 	    dut.io.controller_out.loading_layer.expect(3.U(16.W))
+	    dut.io.controller_out.loading_layer_total_activations.expect(8.U(16.W))
 	    
 	    dut.clock.step()
 	    
@@ -936,15 +953,15 @@ class controlUnitSpec extends AnyFlatSpec with ChiselScalatestTester{
 	    dut.io.controller_out.read_memoryUnits(2).expect(2.U(2.W))
 	    dut.io.controller_out.read_memoryUnits(3).expect(2.U(2.W))
 	    
-	    dut.io.controller_out.write_memoryUnits(0).expect(1.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(1).expect(1.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(2).expect(1.U(2.W))
-	    dut.io.controller_out.write_memoryUnits(3).expect(1.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(0).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(1).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(2).expect(0.U(2.W))
+	    dut.io.controller_out.write_memoryUnits(3).expect(0.U(2.W))
 	    
 	    dut.io.controller_out.address_generator_address_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_enable_valid.expect(true.B)
 	    dut.io.controller_out.address_generator_reset.expect(false.B)
-	    dut.io.controller_out.weight_buffer_load_request.expect(true.B)
+	    dut.io.controller_out.weight_buffer_load_request.expect(false.B)
 	    
 	    dut.io.controller_out.loading_activations(0).expect(5.U(16.W))
 	    dut.io.controller_out.loading_activations(1).expect(6.U(16.W))
