@@ -1,6 +1,9 @@
+/*
 package nntests
 
 import org.scalatest._
+
+
 import org.scalatest.flatspec.AnyFlatSpec
 import scala.util.Random
 import scala.io.Source
@@ -33,20 +36,19 @@ class NeuronSpec extends AnyFlatSpec with ChiselScalatestTester{
     "neuronTester" should "pass" in{
         test(new Neuron(intWidth, fracWidth, sigmoidIntWidth, sigmoidFracWidth)).withAnnotations(Seq(WriteVcdAnnotation)) { dut => 
 
-            // initialize memory
             val lut_values = Source.fromResource("sigmoidlut.txt").getLines().toList
             println(s"[test] Length of file: ${lut_values.length}")
 
-            for( w <- 0 until lut_values.length){
-                var input = lut_values(w)
-                var dut_in = ("b" + input).U
+            // for( w <- 0 until lut_values.length){
+            //     var input = lut_values(w)
+            //     var dut_in = ("b" + input).U
 
-                dut.io.write.poke(true.B)
-                dut.io.w_addr.poke(w.U)
-                dut.io.w_dataIn.poke(dut_in)
-                dut.clock.step()
-            }
-            println("[test] Memory initialized")
+            //     dut.io.write.poke(true.B)
+            //     dut.io.w_addr.poke(w.U)
+            //     dut.io.w_dataIn.poke(dut_in)
+            //     dut.clock.step()
+            // }
+            // println("[test] Memory initialized")
 
             // stats variables
             var num_passed = 0
@@ -57,7 +59,7 @@ class NeuronSpec extends AnyFlatSpec with ChiselScalatestTester{
             var output = 0.0
 
             for (w <- 0 until num_test_vec){
-                dut.io.write.poke(false.B)
+                // dut.io.write.poke(false.B)
                 dut.io.neuron_in.rst.poke(true.B)
                 
                 dut.clock.step()
@@ -78,11 +80,14 @@ class NeuronSpec extends AnyFlatSpec with ChiselScalatestTester{
                 dut.io.neuron_in.op1.poke(1.S)
                 dut.io.neuron_in.op2.poke(dut_bias_in)
 
-                dut.clock.step(2)
+                dut.clock.step()
+                dut.io.neuron_in.bias.poke(false.B)
+
+                dut.clock.step()
 
                 var mac_out = ((weight_in * data_in) / (scala.math.pow(2, 2*fracWidth))) + (bias_in / (scala.math.pow(2, fracWidth)))
                 expected = findSigmoid(mac_out)
-                output = (dut.io.neuron_out.peek().litValue.toDouble) / scala.math.pow(2, 7) // fp(3, 7) in sigmoid lut o/p
+                output = (dut.io.neuron_out.peek().litValue.toDouble) / scala.math.pow(2, fracWidth) 
                 var error = scala.math.abs(expected - output)
 
                 if (checker(error))
@@ -99,4 +104,4 @@ class NeuronSpec extends AnyFlatSpec with ChiselScalatestTester{
             println(s"[test] Test success rate: ${num_passed / (1.0 * num_test_vec)}")
         }
     }
-}
+} */
