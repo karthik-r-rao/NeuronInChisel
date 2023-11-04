@@ -26,6 +26,7 @@ class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
 
     // registers
     val acc = Reg(SInt((2*intWidth + 2*fracWidth).W))
+    val acc1 = Reg(SInt((2*intWidth + 2*fracWidth).W))
 
     multiply := 0.S
 
@@ -44,7 +45,11 @@ class MultiplyAccumulate(intWidth: Int, fracWidth: Int) extends Module{
         acc := acc + multiply
     }
 
-    io.mac_out := acc
+    when (io.mac_in.bias){
+        acc1 := acc + multiply
+    }
+
+    io.mac_out := acc1
 }
 
 object DriverMultiplyAccumulate extends App{

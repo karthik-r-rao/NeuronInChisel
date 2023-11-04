@@ -1,0 +1,23 @@
+[
+  {
+    "class":"firrtl.EmitCircuitAnnotation",
+    "emitter":"firrtl.VerilogEmitter"
+  },
+  {
+    "class":"firrtl.annotations.LoadMemoryAnnotation",
+    "target":"Neuron.SigmoidLut.mem",
+    "fileName":"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_3380c28/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/sigmoidlut.txt",
+    "hexOrBinary":"b",
+    "originalMemoryNameOpt":"mem"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxTargetDirAnno",
+    "targetDir":"generated/"
+  },
+  {
+    "class":"firrtl.transforms.BlackBoxInlineAnno",
+    "target":"Neuron.SigmoidLut",
+    "name":"Neuron.SigmoidLut.mem.v",
+    "text":"module BindsTo_0_SigmoidLut(\n  input        clock,\n  input  [9:0] io_addr,\n  output [9:0] io_dataOut\n);\n\n  \ninitial begin\n  $readmemb(\"file:/home/vsathvik/Academics/major_project/neural-net-chisel-main/target/bg-jobs/sbt_3380c28/job-1/target/0cfe3e9f/a6da8bc6/neuroninchisel_2.13-0.1.0.jar!/sigmoidlut.txt\", SigmoidLut.mem);\nend\n                      endmodule\n\nbind SigmoidLut BindsTo_0_SigmoidLut BindsTo_0_SigmoidLut_Inst(.*);"
+  }
+]

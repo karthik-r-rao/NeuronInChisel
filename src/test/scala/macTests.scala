@@ -57,6 +57,7 @@ class MultiplyAccumulateSpec extends AnyFlatSpec with ChiselScalatestTester{
 
                 dut.clock.step()
 
+                dut.io.mac_in.bias.poke(false.B)
                 expected = ((weight_in * data_in) / (scala.math.pow(2, 2*fracWidth))) + (bias_in / (scala.math.pow(2, fracWidth)))
                 output = (dut.io.mac_out.peek().litValue.toDouble) / scala.math.pow(2, 2*fracWidth)
                 var error = scala.math.abs(expected - output)
